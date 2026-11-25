@@ -1,72 +1,16 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PWB — Physics Without Borders</title>
-    <link rel="stylesheet" href="css/style.css">
-</head>
-<body>
-<div class="container">
-    <header class="site-header">
-    <div class="brand-subtitle">PWB — PHYSICS WITHOUT BORDERS</div>
-    <h1 class="page-title">PHYSICS WITHOUT BORDERS</h1>
-    <p class="page-desc">Интерактивная образовательная STEM-платформа: симуляции, формулы и виртуальные лаборатории.</p>
-    <nav class="nav-bar">
-        <a href="index.html" class="nav-link active">Главная</a>
-        <a href="mechanics.html" class="nav-link">Механика</a>
-        <a href="aerodynamics.html" class="nav-link">Аэродинамика</a>
-        <a href="space.html" class="nav-link">Космос</a>
-        <a href="experiments.html" class="nav-link">Эксперименты</a>
-    </nav>
-</header>
-
-    <div class="grid-equal">
-        <a href="mechanics.html" class="panel card-link">
-            <div>
-                <span class="badge">01 • Механика</span>
-                <h2 style="margin-bottom:8px;">Лаборатория механики</h2>
-                <p style="color:var(--text-muted); font-size:0.92rem;">Интерактивный математический маятник: перетаскивание груза, изменение длины нити, массы и гравитации, график угла во времени.</p>
-            </div>
-            <div style="margin-top:16px; color:var(--accent); font-weight:700;">Открыть лабораторию →</div>
-        </a>
-
-        <a href="aerodynamics.html" class="panel card-link">
-            <div>
-                <span class="badge">02 • Аэродинамика</span>
-                <h2 style="margin-bottom:8px;">Лаборатория аэродинамики</h2>
-                <p style="color:var(--text-muted); font-size:0.92rem;">Модель крыла в воздушном потоке: регулировка скорости ветра, угла атаки и плотности воздуха с расчётом подъёмной силы.</p>
-            </div>
-            <div style="margin-top:16px; color:var(--accent); font-weight:700;">Открыть лабораторию →</div>
-        </a>
-
-        <a href="space.html" class="panel card-link">
-            <div>
-                <span class="badge">03 • Астрофизика и космос</span>
-                <h2 style="margin-bottom:8px;">Космическая лаборатория</h2>
-                <p style="color:var(--text-muted); font-size:0.92rem;">Интерактивная 3D-модель Солнечной системы, звёзды, чёрные дыры, галактики, сравнение планет и расчёт первой космической скорости.</p>
-            </div>
-            <div style="margin-top:16px; color:var(--accent); font-weight:700;">Открыть лабораторию →</div>
-        </a>
-
-        <a href="experiments.html" class="panel card-link">
-            <div>
-                <span class="badge">04 • Практикум</span>
-                <h2 style="margin-bottom:8px;">Лаборатория экспериментов</h2>
-                <p style="color:var(--text-muted); font-size:0.92rem;">Журнал реальных и виртуальных опытов: запись времени и пути, автоматический расчёт средней скорости и построение графика.</p>
-            </div>
-            <div style="margin-top:16px; color:var(--accent); font-weight:700;">Открыть лабораторию →</div>
-        </a>
-    </div>
-
-    <div class="panel">
-        <div class="panel-title">О проекте PWB — Physics Without Borders</div>
-        <p style="color:var(--text-muted); font-size:0.95rem;">
-            Платформа объединяет ключевые разделы физики в одном интерактивном пространстве. Каждая лаборатория построена на физических формулах и позволяет проверять гипотезы, менять параметры среды и наблюдать за поведением моделей в реальном времени.
-        </p>
-    </div>
-
-    <div class="footer-note">PWB — Physics Without Borders • Explore. Experiment. Understand.</div>
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#071426"><title>PHYSICS WITHOUT BORDERS — PWB</title><style>
+:root{--bg:#071426;--panel:#10243c;--line:#294965;--text:#eff7ff;--muted:#a3b8cc;--blue:#58bdff;--cyan:#76e1e8;--gold:#ffd477}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -10%,#173b5c 0,#071426 52%);color:var(--text);font:15px/1.5 system-ui,-apple-system,Segoe UI,sans-serif}
+header,main,footer{max-width:1100px;margin:auto}header{padding:24px 17px 18px}.brand{font-size:12px;letter-spacing:.16em;color:var(--blue);font-weight:800}h1{font-size:clamp(28px,6vw,46px);line-height:1.08;margin:10px 0}h2{font-size:19px;margin:0 0 12px}.intro{color:var(--muted);max-width:760px}
+main{padding:0 14px 38px}.nav{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 17px}.nav a,.btn{display:inline-block;text-decoration:none;color:var(--text);background:#153a5a;border:1px solid #3a6688;padding:9px 13px;border-radius:10px;font-weight:700}.nav a.active,.btn.primary{background:linear-gradient(100deg,#087bbd,#1765ad)}
+.panel{background:linear-gradient(145deg,#102943,#0a1c30);border:1px solid var(--line);border-radius:17px;padding:15px;box-shadow:0 12px 30px #0003}.grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(260px,.8fr);gap:13px}.scene{background:#030b17;border:1px solid #1d3a55;border-radius:13px;overflow:hidden}canvas{display:block;width:100%;height:320px;touch-action:none}.hint,.small{font-size:12px;color:var(--muted)}.controls{display:grid;gap:14px}.control label{display:flex;justify-content:space-between;gap:10px;font-size:13px}.control output{color:var(--cyan);font-weight:700}input[type=range]{width:100%;accent-color:var(--blue);margin-top:8px}button{cursor:pointer}.buttons{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:12px}.stat{background:#08192b;border:1px solid #1c3b56;border-radius:11px;padding:9px}.stat span{display:block;color:var(--muted);font-size:11px}.stat strong{font-size:17px;display:block;margin-top:3px}.formula{font-family:ui-monospace,monospace;background:#08192b;border:1px solid #1d3d58;padding:10px;border-radius:10px;color:#bde9ff;font-size:13px;margin-top:12px}.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}.cardlink{display:block;text-decoration:none;color:inherit;transition:transform .15s}.cardlink:hover{transform:translateY(-3px)}.emoji{font-size:30px}.chart{margin-top:13px}.chart canvas{height:190px}.notice{border-left:3px solid var(--gold);padding:9px 12px;background:#13263a;color:#dceafa;border-radius:7px;font-size:13px}footer{padding:0 17px 25px;color:#7893ad;font-size:11px}@media(max-width:720px){.grid{grid-template-columns:1fr}canvas{height:290px}.panel{padding:12px}}
+</style></head><body><header><div class="brand">PWB · PHYSICS WITHOUT BORDERS</div><h1>PHYSICS WITHOUT BORDERS</h1><p class="intro">Интерактивная научная платформа: изучай физику через модели, эксперименты, графики и расчёты.</p></header><main><nav class="nav"><a class="active" href="index.html">Главная</a><a class="" href="mechanics.html">Механика</a><a class="" href="aerodynamics.html">Аэродинамика</a><a class="" href="space.html">Космос</a><a class="" href="experiments.html">Эксперименты</a></nav>
+<div class="panel"><h2>Исследуй. Экспериментируй. Создавай.</h2><p class="intro">Выбери лабораторию, измени параметры и посмотри, как физические законы проявляются в моделях.</p></div>
+<div class="cards" style="margin-top:13px">
+<a class="panel cardlink" href="mechanics.html"><div class="emoji">⚙️</div><h2>Механика</h2><p class="small">Маятник, пружина, движение и силы</p></a>
+<a class="panel cardlink" href="aerodynamics.html"><div class="emoji">✈️</div><h2>Аэродинамика</h2><p class="small">Крыло, угол атаки, скорость потока и подъёмная сила</p></a>
+<a class="panel cardlink" href="space.html"><div class="emoji">🪐</div><h2>Физика космоса</h2><p class="small">Гравитация, планеты и орбиты</p></a>
+<a class="panel cardlink" href="experiments.html"><div class="emoji">🧪</div><h2>Эксперименты</h2><p class="small">Ввод измерений, таблица и график</p></a>
 </div>
-</body>
-</html>
+<div class="notice" style="margin-top:13px">Это учебная бета-версия: модели упрощены и предназначены для изучения закономерностей, а не для инженерных расчётов реальных аппаратов.</div>
+</main><footer>Учебные идеализированные модели PWB. Сравнивай симуляции с реальными измерениями и указывай ограничения моделей.</footer><script></script></body></html>
