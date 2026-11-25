@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PWB — Космическая лаборатория</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="container">
+    <header class="site-header">
+    <div class="brand-subtitle">PWB — PHYSICS WITHOUT BORDERS</div>
+    <h1 class="page-title">КОСМИЧЕСКАЯ ЛАБОРАТОРИЯ</h1>
+    <p class="page-desc">Интерактивная 3D-модель Вселенной: планеты, звёзды, чёрные дыры, галактики, сравнение тел и орбитальные расчёты.</p>
+    <nav class="nav-bar">
+        <a href="index.html" class="nav-link">Главная</a>
+        <a href="mechanics.html" class="nav-link">Механика</a>
+        <a href="aerodynamics.html" class="nav-link">Аэродинамика</a>
+        <a href="space.html" class="nav-link active">Космос</a>
+        <a href="experiments.html" class="nav-link">Эксперименты</a>
+    </nav>
+</header>
+
+    <!-- 3D-сцена и инспектор -->
+    <div class="grid-2">
+        <div class="panel">
+            <div class="panel-title">
+                <span>01 • Интерактивный 3D-космос</span>
+                <div style="display:flex; gap:6px;">
+                    <button class="btn btn-secondary active" id="mode-solar">Солнечная система</button>
+                    <button class="btn btn-secondary" id="mode-deep">Звёзды и чёрные дыры</button>
+                </div>
+            </div>
+            <canvas id="space-canvas" class="sim-canvas"></canvas>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:12px;">
+                <div class="control-row" style="margin:0;">
+                    <div class="control-label"><span>Скорость орбит</span><span class="val" id="sp-speed-val">1.0x</span></div>
+                    <input type="range" id="sp-speed" min="0" max="5" step="0.1" value="1">
+                </div>
+                <div class="control-row" style="margin:0;">
+                    <div class="control-label"><span>Масштаб (Zoom)</span><span class="val" id="sp-zoom-val">1.0x</span></div>
+                    <input type="range" id="sp-zoom" min="0.4" max="3.0" step="0.1" value="1">
+                </div>
+            </div>
+            <p style="color:var(--text-muted); font-size:0.82rem; margin-top:8px;">
+                Вращай сцену мышкой или пальцем, приближай колёсиком и нажимай на любой объект, чтобы открыть его характеристики.
+            </p>
+        </div>
+
+        <div class="panel" id="space-inspector"></div>
+    </div>
+
+    <!-- Атлас объектов с фильтрами -->
+    <div class="panel" style="margin-bottom:20px;">
+        <div class="panel-title" style="flex-wrap:wrap;">
+            <span>02 • Атлас космических объектов</span>
+            <div class="btn-row" style="margin:0;">
+                <button class="btn btn-secondary active" data-cat="all">Все</button>
+                <button class="btn btn-secondary" data-cat="planets">Планеты и спутники</button>
+                <button class="btn btn-secondary" data-cat="stars">Звёзды</button>
+                <button class="btn btn-secondary" data-cat="blackholes">Чёрные дыры</button>
+                <button class="btn btn-secondary" data-cat="galaxies">Галактики и туманности</button>
+                <button class="btn btn-secondary" data-cat="bodies">Кометы и пульсары</button>
+            </div>
+        </div>
+        <div class="grid-equal" id="atlas-grid" style="margin-bottom:0;"></div>
+    </div>
+
+    <!-- Сравнение и физический калькулятор космоса -->
+    <div class="grid-2">
+        <div class="panel">
+            <div class="panel-title">03 • Сравнение космических тел</div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                <div>
+                    <label style="font-size:0.85rem; color:var(--text-muted);">Объект A</label>
+                    <select id="cmp-a"></select>
+                </div>
+                <div>
+                    <label style="font-size:0.85rem; color:var(--text-muted);">Объект B</label>
+                    <select id="cmp-b"></select>
+                </div>
+            </div>
+            <div id="cmp-table-wrap"></div>
+        </div>
+
+        <div class="panel">
+            <div class="panel-title">04 • Астрофизические расчёты</div>
+            <div class="formula-box">P = m · g &nbsp;|&nbsp; v₁ = √(G·M / R) &nbsp;|&nbsp; L ∝ M³·⁵</div>
+            <div class="control-row">
+                <div class="control-label"><span>Небесное тело</span></div>
+                <select id="calc-body"></select>
+            </div>
+            <div class="control-row">
+                <div class="control-label"><span>Масса объекта (кг)</span></div>
+                <input type="number" id="calc-mass" value="70" min="1">
+            </div>
+            <div id="calc-output" class="metrics-grid"></div>
+        </div>
+    </div>
+</div>
+
+<script src="js/space_data.js"></script>
+<script src="js/space_app.js"></script>
+</body>
+</html>
