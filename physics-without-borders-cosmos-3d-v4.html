@@ -1,0 +1,2333 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PHYSICS WITHOUT BORDERS — Космос 3D, планеты, звёзды и чёрные дыры</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-primary: #070b14;
+      --bg-secondary: #0c1220;
+      --bg-card: rgba(16, 24, 42, 0.85);
+      --bg-card-hover: rgba(23, 35, 60, 0.96);
+      --border-subtle: rgba(148, 163, 184, 0.18);
+      --border-accent: rgba(99, 102, 241, 0.55);
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+      --text-muted: #64748b;
+      --accent-indigo: #6366f1;
+      --accent-cyan: #22d3ee;
+      --accent-amber: #f59e0b;
+      --accent-rose: #fb7185;
+      --accent-emerald: #34d399;
+      --radius-lg: 18px;
+      --radius-md: 12px;
+      --radius-sm: 8px;
+      --shadow-card: 0 18px 40px -15px rgba(2, 6, 23, 0.85);
+      --transition: all 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.58;
+      min-height: 100vh;
+      background-image:
+        radial-gradient(circle at 14% 10%, rgba(99, 102, 241, 0.16), transparent 40%),
+        radial-gradient(circle at 86% 16%, rgba(34, 211, 238, 0.12), transparent 38%),
+        radial-gradient(circle at 50% 88%, rgba(139, 92, 246, 0.11), transparent 45%);
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3, h4, .brand-font {
+      font-family: 'Space Grotesk', 'Inter', sans-serif;
+      letter-spacing: -0.02em;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 22px;
+    }
+
+    /* Header */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      background: rgba(7, 11, 20, 0.85);
+      border-bottom: 1px solid var(--border-subtle);
+    }
+
+    .nav-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 68px;
+      gap: 14px;
+      flex-wrap: wrap;
+      padding: 8px 0;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      font-weight: 700;
+      font-size: 1.02rem;
+    }
+
+    .brand-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px 9px;
+      border-radius: 7px;
+      background: linear-gradient(135deg, var(--accent-indigo), var(--accent-cyan));
+      color: #050811;
+      font-weight: 700;
+      font-size: 0.78rem;
+      letter-spacing: 0.04em;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      flex-wrap: wrap;
+    }
+
+    .nav-link {
+      padding: 7px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 0.86rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      transition: var(--transition);
+    }
+
+    .nav-link:hover {
+      color: var(--text-primary);
+      background: rgba(148, 163, 184, 0.1);
+    }
+
+    .nav-link.active {
+      color: var(--text-primary);
+      background: rgba(99, 102, 241, 0.24);
+      border: 1px solid rgba(99, 102, 241, 0.48);
+    }
+
+    /* Hero */
+    .hero {
+      padding: 34px 0 16px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 13px;
+      border-radius: 999px;
+      background: rgba(99, 102, 241, 0.14);
+      border: 1px solid rgba(99, 102, 241, 0.35);
+      color: #c7d2fe;
+      font-size: 0.8rem;
+      font-weight: 500;
+      margin-bottom: 12px;
+    }
+
+    .hero h1 {
+      font-size: clamp(1.85rem, 3.8vw, 2.75rem);
+      line-height: 1.12;
+      margin-bottom: 10px;
+    }
+
+    .hero p.lead {
+      color: var(--text-secondary);
+      max-width: 900px;
+      font-size: 0.98rem;
+    }
+
+    section.sec {
+      padding: 32px 0;
+    }
+
+    .sec-head {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 14px;
+      margin-bottom: 16px;
+    }
+
+    .sec-head h2 {
+      font-size: clamp(1.4rem, 2.4vw, 1.9rem);
+    }
+
+    .sec-head p {
+      color: var(--text-secondary);
+      font-size: 0.92rem;
+      max-width: 720px;
+    }
+
+    /* 3D Interactive Stage */
+    .stage-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 18px;
+      box-shadow: var(--shadow-card);
+    }
+
+    .stage-toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 7px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .pill-btn {
+      padding: 7px 13px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-subtle);
+      background: rgba(11, 17, 31, 0.92);
+      color: var(--text-secondary);
+      font-family: inherit;
+      font-size: 0.83rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .pill-btn:hover {
+      color: var(--text-primary);
+      border-color: rgba(148, 163, 184, 0.42);
+    }
+
+    .pill-btn.active {
+      background: rgba(99, 102, 241, 0.25);
+      border-color: var(--accent-indigo);
+      color: #eef2ff;
+    }
+
+    .pill-btn.cyan-active {
+      background: rgba(34, 211, 238, 0.18);
+      border-color: var(--accent-cyan);
+      color: #cffafe;
+    }
+
+    .pill-btn.amber-active {
+      background: rgba(245, 158, 11, 0.22);
+      border-color: var(--accent-amber);
+      color: #fef3c7;
+    }
+
+    .speed-box {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(11, 17, 31, 0.85);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-sm);
+      padding: 6px 12px;
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+    }
+
+    .speed-box strong {
+      color: var(--accent-cyan);
+      min-width: 48px;
+      text-align: right;
+    }
+
+    .viewport-wrap {
+      position: relative;
+      width: 100%;
+      height: 550px;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      border: 1px solid rgba(99, 102, 241, 0.35);
+      background: #03060e;
+    }
+
+    canvas#space3dCanvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      cursor: grab;
+    }
+
+    canvas#space3dCanvas.dragging {
+      cursor: grabbing;
+    }
+
+    .hud-overlay {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      right: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 10px;
+      pointer-events: none;
+    }
+
+    .hud-chip {
+      background: rgba(7, 11, 20, 0.8);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(148, 163, 184, 0.22);
+      border-radius: var(--radius-sm);
+      padding: 7px 11px;
+      font-size: 0.78rem;
+      color: #cbd5e1;
+    }
+
+    .hud-zoom-controls {
+      display: flex;
+      gap: 6px;
+      pointer-events: auto;
+    }
+
+    .hud-zoom-btn {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      border: 1px solid rgba(148, 163, 184, 0.28);
+      background: rgba(12, 18, 32, 0.88);
+      color: var(--text-primary);
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .hud-zoom-btn:hover {
+      border-color: var(--accent-cyan);
+      color: var(--accent-cyan);
+    }
+
+    /* Quick Object Bar */
+    .object-selector-bar {
+      display: flex;
+      gap: 7px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+    }
+
+    .obj-pill {
+      padding: 6px 11px;
+      border-radius: 999px;
+      border: 1px solid var(--border-subtle);
+      background: rgba(15, 23, 40, 0.86);
+      color: var(--text-secondary);
+      font-size: 0.8rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .obj-pill:hover, .obj-pill.selected {
+      color: #fff;
+      border-color: var(--accent-cyan);
+      background: rgba(34, 211, 238, 0.16);
+    }
+
+    /* Selected Object Card + Universal Interaction Bar */
+    .selected-panel {
+      margin-top: 14px;
+      background: rgba(7, 11, 20, 0.78);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      border-radius: var(--radius-md);
+      padding: 16px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .sel-top-row {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 16px;
+      align-items: center;
+    }
+
+    .sel-orb {
+      width: 62px;
+      height: 62px;
+      border-radius: 50%;
+      box-shadow: inset -8px -8px 16px rgba(0,0,0,0.6), 0 0 22px rgba(99,102,241,0.32);
+      flex-shrink: 0;
+    }
+
+    .sel-cat {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--accent-cyan);
+      font-weight: 700;
+    }
+
+    .sel-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-top: 2px;
+    }
+
+    .sel-desc {
+      color: var(--text-secondary);
+      font-size: 0.89rem;
+      margin-top: 4px;
+    }
+
+    .sel-metrics {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(140px, 1fr));
+      gap: 8px;
+    }
+
+    .sel-metric {
+      background: rgba(16, 24, 42, 0.85);
+      border: 1px solid rgba(148, 163, 184, 0.14);
+      border-radius: 8px;
+      padding: 7px 10px;
+      font-size: 0.78rem;
+    }
+
+    .sel-metric span {
+      display: block;
+      color: var(--text-muted);
+      font-size: 0.7rem;
+    }
+
+    .sel-metric strong {
+      color: var(--text-primary);
+    }
+
+    .interact-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(148, 163, 184, 0.14);
+    }
+
+    .interact-status {
+      font-size: 0.82rem;
+      color: #a5f3fc;
+      background: rgba(34, 211, 238, 0.08);
+      border: 1px solid rgba(34, 211, 238, 0.24);
+      border-radius: 8px;
+      padding: 6px 11px;
+    }
+
+    /* Catalog Grids */
+    .filter-row {
+      display: flex;
+      gap: 7px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(275px, 1fr));
+      gap: 16px;
+    }
+
+    .obj-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 18px;
+      box-shadow: var(--shadow-card);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 12px;
+      transition: var(--transition);
+      cursor: pointer;
+    }
+
+    .obj-card:hover {
+      transform: translateY(-3px);
+      background: var(--bg-card-hover);
+      border-color: var(--border-accent);
+    }
+
+    .card-top {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .mini-orb {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      box-shadow: inset -6px -6px 12px rgba(0,0,0,0.55);
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 3px 9px;
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      background: rgba(34, 211, 238, 0.14);
+      color: #67e8f9;
+      border: 1px solid rgba(34, 211, 238, 0.3);
+      margin-bottom: 4px;
+    }
+
+    .tag.amber {
+      background: rgba(245, 158, 11, 0.14);
+      color: #fcd34d;
+      border-color: rgba(245, 158, 11, 0.32);
+    }
+
+    .tag.rose {
+      background: rgba(251, 113, 133, 0.14);
+      color: #fda4af;
+      border-color: rgba(251, 113, 133, 0.32);
+    }
+
+    .tag.emerald {
+      background: rgba(52, 211, 153, 0.14);
+      color: #6ee7b7;
+      border-color: rgba(52, 211, 153, 0.32);
+    }
+
+    .card-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 7px;
+      background: rgba(7, 11, 20, 0.58);
+      border: 1px solid rgba(148, 163, 184, 0.1);
+      border-radius: 8px;
+      padding: 8px 10px;
+      font-size: 0.78rem;
+    }
+
+    .card-stats span {
+      display: block;
+      color: var(--text-muted);
+      font-size: 0.7rem;
+    }
+
+    .card-stats strong {
+      color: var(--text-primary);
+    }
+
+    .obj-card p.summary {
+      font-size: 0.86rem;
+      color: var(--text-secondary);
+    }
+
+    .card-foot {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #a5b4fc;
+    }
+
+    /* Comparison & Physics Lab */
+    .two-col {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+      gap: 18px;
+    }
+
+    .panel-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      box-shadow: var(--shadow-card);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .compare-selects {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    select {
+      width: 100%;
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border-subtle);
+      background: rgba(7, 11, 20, 0.88);
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 0.86rem;
+    }
+
+    table.cmp-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.84rem;
+    }
+
+    table.cmp-table th, table.cmp-table td {
+      padding: 8px 10px;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.14);
+      text-align: left;
+    }
+
+    table.cmp-table th {
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.78rem;
+    }
+
+    .ctrl {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .ctrl-top {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.84rem;
+      color: var(--text-secondary);
+    }
+
+    .ctrl-top strong {
+      color: var(--text-primary);
+    }
+
+    input[type="range"] {
+      width: 100%;
+      accent-color: var(--accent-indigo);
+      cursor: pointer;
+    }
+
+    .lab-out-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      background: rgba(7, 11, 20, 0.72);
+      border: 1px solid rgba(148, 163, 184, 0.14);
+      border-radius: var(--radius-md);
+      padding: 12px;
+    }
+
+    .lab-out span {
+      display: block;
+      font-size: 0.73rem;
+      color: var(--text-muted);
+    }
+
+    .lab-out strong {
+      font-size: 0.98rem;
+      color: var(--accent-cyan);
+    }
+
+    .formula-strip {
+      background: rgba(7, 11, 20, 0.75);
+      border: 1px solid rgba(148, 163, 184, 0.16);
+      border-radius: 8px;
+      padding: 9px 12px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.8rem;
+      color: #e2e8f0;
+    }
+
+    canvas#graphCanvas {
+      width: 100%;
+      height: 230px;
+      border-radius: 10px;
+      border: 1px solid rgba(148, 163, 184, 0.16);
+      background: #040711;
+      display: block;
+    }
+
+    footer {
+      margin-top: 44px;
+      border-top: 1px solid var(--border-subtle);
+      background: rgba(7, 11, 20, 0.88);
+      padding: 24px 0;
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+    }
+
+    @media (max-width: 860px) {
+      .sel-top-row {
+        grid-template-columns: 1fr;
+      }
+      .viewport-wrap {
+        height: 430px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container nav-wrap">
+      <a href="#top" class="brand brand-font">
+        <span class="brand-badge">PWB</span>
+        <span>PHYSICS WITHOUT BORDERS</span>
+      </a>
+      <nav aria-label="Основная навигация проекта">
+        <a href="#scene3d" class="nav-link active">3D-модель</a>
+        <a href="#planets" class="nav-link">Планеты и Плутон</a>
+        <a href="#stars" class="nav-link">Звёзды</a>
+        <a href="#black-holes" class="nav-link">Чёрные дыры</a>
+        <a href="#deep-sky" class="nav-link">Галактики и тела</a>
+        <a href="#compare" class="nav-link">Сравнение</a>
+        <a href="#lab" class="nav-link">Физлаборатория</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="container">
+        <div class="eyebrow">🌌 Единая интерактивная космо-платформа PWB · Полное 3D-взаимодействие со всеми объектами</div>
+        <h1 class="brand-font">Космос без границ: планеты, Плутон, звёзды, чёрные дыры, галактики и космические тела</h1>
+        <p class="lead">
+          Взаимодействуйте с любыми объектами — не только с планетами, но и со звёздами, чёрными дырами, галактиками, туманностями
+          и космическими телами: вращайте, приближайте, возбуждайте физический отклик, сравнивайте и исследуйте в лаборатории.
+        </p>
+      </div>
+    </section>
+
+    <!-- 3D Interactive Space Model -->
+    <section id="scene3d" class="sec">
+      <div class="container">
+        <div class="stage-box">
+          <div class="stage-toolbar">
+            <div class="btn-group" role="group" aria-label="Режим 3D-сцены">
+              <button id="viewSolarBtn" class="pill-btn active" type="button">🪐 Солнечная система (8 планет + Плутон)</button>
+              <button id="viewStarsBhBtn" class="pill-btn" type="button">☀️ Звёзды и чёрные дыры</button>
+              <button id="viewDeepBtn" class="pill-btn" type="button">🌌 Галактики, туманности и тела</button>
+            </div>
+
+            <div class="btn-group">
+              <button id="playPauseBtn" class="pill-btn cyan-active" type="button">⏸ Пауза</button>
+              <button id="toggleOrbitsBtn" class="pill-btn cyan-active" type="button">⭕ Орбиты / поля</button>
+              <button id="toggleLabelsBtn" class="pill-btn cyan-active" type="button">🏷 Подписи</button>
+              <button id="resetCamBtn" class="pill-btn" type="button">↺ Сброс камеры</button>
+              <div class="speed-box">
+                <span>Скорость</span>
+                <input id="speedRange" type="range" min="0" max="4" step="0.1" value="1" style="width: 90px;" />
+                <strong id="speedLabel">1.0×</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="viewport-wrap">
+            <canvas id="space3dCanvas"></canvas>
+            <div class="hud-overlay">
+              <div class="hud-chip" id="camHudInfo">
+                ЛКМ + перетаскивание: вращение 3D-сцены · Колёсико: приближение/отдаление · Клик по любому объекту: выбор и взаимодействие
+              </div>
+              <div class="hud-zoom-controls">
+                <button id="zoomInBtn" class="hud-zoom-btn" type="button" title="Приблизить">+</button>
+                <button id="zoomOutBtn" class="hud-zoom-btn" type="button" title="Отдалить">−</button>
+              </div>
+            </div>
+          </div>
+
+          <div id="quickObjBar" class="object-selector-bar" aria-label="Быстрый выбор космического объекта"></div>
+
+          <div id="selectedObjPanel" class="selected-panel" aria-live="polite">
+            <div class="sel-top-row">
+              <div id="selOrb" class="sel-orb"></div>
+              <div>
+                <div id="selCat" class="sel-cat"></div>
+                <h3 id="selTitle" class="sel-title"></h3>
+                <p id="selDesc" class="sel-desc"></p>
+              </div>
+              <div id="selMetrics" class="sel-metrics"></div>
+            </div>
+
+            <div class="interact-bar">
+              <div class="btn-group">
+                <button id="focusObjBtn" class="pill-btn cyan-active" type="button">🔍 Приблизить объект</button>
+                <button id="exciteObjBtn" class="pill-btn amber-active" type="button" id="exciteObjBtn">⚡ Взаимодействовать (импульс / отклик)</button>
+                <button id="compareObjBtn" class="pill-btn" type="button">⚖️ Добавить в сравнение</button>
+                <button id="toLabObjBtn" class="pill-btn" type="button">🔬 Передать в лабораторию</button>
+              </div>
+              <div id="interactStatus" class="interact-status">
+                Выберите любой объект или нажмите «Взаимодействовать» для проверки его физического отклика в 3D.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Planets + Pluto -->
+    <section id="planets" class="sec">
+      <div class="container">
+        <div class="sec-head">
+          <div>
+            <h2>🪐 Планеты и Плутон</h2>
+            <p>Все 8 планет Солнечной системы, карликовая планета Плутон, спутники, орбиты, вращение и приближение в 3D.</p>
+          </div>
+        </div>
+        <div class="filter-row" id="planetFilters">
+          <button class="pill-btn active" data-pfilter="all" type="button">Все (9 объектов)</button>
+          <button class="pill-btn" data-pfilter="terrestrial" type="button">Земная группа (4)</button>
+          <button class="pill-btn" data-pfilter="giant" type="button">Газовые и ледяные гиганты (4)</button>
+          <button class="pill-btn" data-pfilter="dwarf" type="button">Карликовая планета (Плутон)</button>
+        </div>
+        <div id="planetsCardsGrid" class="cards-grid"></div>
+      </div>
+    </section>
+
+    <!-- Stars -->
+    <section id="stars" class="sec">
+      <div class="container">
+        <div class="sec-head">
+          <div>
+            <h2>☀️ Звёзды</h2>
+            <p>Солнце, Сириус, Вега, Бетельгейзе, Ригель — вращение, корона/свечение, импульс излучения и расчёты светимости.</p>
+          </div>
+        </div>
+        <div id="starsCardsGrid" class="cards-grid"></div>
+      </div>
+    </section>
+
+    <!-- Black Holes -->
+    <section id="black-holes" class="sec">
+      <div class="container">
+        <div class="sec-head">
+          <div>
+            <h2>🕳️ Чёрные дыры</h2>
+            <p>Стрелец A*, M87*, Cygnus X-1 — аккреционный диск, релятивистские джеты, горизонт событий и радиус Шварцшильда.</p>
+          </div>
+        </div>
+        <div id="bhCardsGrid" class="cards-grid"></div>
+      </div>
+    </section>
+
+    <!-- Galaxies, Nebulae & Cosmic Bodies -->
+    <section id="deep-sky" class="sec">
+      <div class="container">
+        <div class="sec-head">
+          <div>
+            <h2>🌌 Галактики, туманности и космические тела</h2>
+            <p>Млечный Путь, Андромеда, туманности, астероиды, кометы, метеориты, нейтронные звёзды и сверхновые.</p>
+          </div>
+        </div>
+        <div id="deepCardsGrid" class="cards-grid"></div>
+      </div>
+    </section>
+
+    <!-- Comparison Tool -->
+    <section id="compare" class="sec">
+      <div class="container">
+        <div class="sec-head">
+          <div>
+            <h2>⚖️ Сравнение космических тел</h2>
+            <p>Сравнивайте любые два объекта из каталога — планеты, звёзды, чёрные дыры, галактики, туманности или малые тела.</p>
+          </div>
+        </div>
+        <div class="panel-card">
+          <div class="compare-selects">
+            <div>
+              <label for="cmpSelectA" style="display:block;font-size:0.78rem;color:var(--text-muted);margin-bottom:4px;">Объект A</label>
+              <select id="cmpSelectA"></select>
+            </div>
+            <div>
+              <label for="cmpSelectB" style="display:block;font-size:0.78rem;color:var(--text-muted);margin-bottom:4px;">Объект B</label>
+              <select id="cmpSelectB"></select>
+            </div>
+          </div>
+          <div style="overflow-x:auto;">
+            <table class="cmp-table" id="cmpTable"></table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Physics Lab: Formulas, Calculators & Graphs -->
+    <section id="lab" class="sec">
+      <div class="container">
+        <div class="sec-head">
+          <div>
+            <h2>🔬 Физическая лаборатория</h2>
+            <p>Гравитация, масса и вес, круговая орбита, радиус Шварцшильда, светимость и температура звёзд, а также интерактивные графики.</p>
+          </div>
+        </div>
+
+        <div class="two-col">
+          <div class="panel-card">
+            <h3>Гравитация, масса, вес и орбиты</h3>
+
+            <div class="ctrl">
+              <div class="ctrl-top"><span>Масса тела (m)</span><strong id="labMassVal">70 кг</strong></div>
+              <input id="labMassSlider" type="range" min="1" max="500" step="1" value="70" />
+            </div>
+
+            <div class="ctrl">
+              <div class="ctrl-top"><span>Ускорение свободного падения (g)</span><strong id="labGVal">9.81 м/с²</strong></div>
+              <input id="labGSlider" type="range" min="0.5" max="30" step="0.05" value="9.81" />
+            </div>
+
+            <div class="ctrl">
+              <div class="ctrl-top"><span>Масса центрального тела (M☉)</span><strong id="labStarMassVal">1.0 M☉</strong></div>
+              <input id="labStarMassSlider" type="range" min="0.1" max="50" step="0.1" value="1.0" />
+            </div>
+
+            <div class="ctrl">
+              <div class="ctrl-top"><span>Радиус орбиты (а. е.)</span><strong id="labOrbitRVal">1.00 а. е.</strong></div>
+              <input id="labOrbitRSlider" type="range" min="0.2" max="40" step="0.1" value="1.0" />
+            </div>
+
+            <div class="lab-out-grid">
+              <div class="lab-out"><span>Вес P = m·g</span><strong id="outWeight">686.7 Н</strong></div>
+              <div class="lab-out"><span>Орбитальная скорость v</span><strong id="outOrbV">29.78 км/с</strong></div>
+              <div class="lab-out"><span>Период обращения T</span><strong id="outOrbT">1.00 год</strong></div>
+              <div class="lab-out"><span>Радиус Шварцшильда r_s</span><strong id="outRs">2.95 км</strong></div>
+            </div>
+
+            <div class="formula-strip">
+              P = m·g &nbsp;|&nbsp; v = √(GM/r) &nbsp;|&nbsp; T² = (4π²/GM)·a³ &nbsp;|&nbsp; r_s = 2GM/c²
+            </div>
+          </div>
+
+          <div class="panel-card">
+            <h3>Светимость звезды и график зависимости</h3>
+
+            <div class="ctrl">
+              <div class="ctrl-top"><span>Радиус звезды (R / R☉)</span><strong id="labRadStarVal">1.0 R☉</strong></div>
+              <input id="labRadStarSlider" type="range" min="0.1" max="50" step="0.1" value="1.0" />
+            </div>
+
+            <div class="ctrl">
+              <div class="ctrl-top"><span>Температура поверхности (T)</span><strong id="labTempStarVal">5 778 K</strong></div>
+              <input id="labTempStarSlider" type="range" min="2500" max="35000" step="100" value="5778" />
+            </div>
+
+            <div class="ctrl">
+              <div class="ctrl-top"><span>Режим графика</span><strong id="graphModeLabel">Орбитальная скорость v(r)</strong></div>
+              <div class="btn-group">
+                <button id="gModeOrbBtn" class="pill-btn active" type="button">v(r) для орбиты</button>
+                <button id="gModeLumBtn" class="pill-btn" type="button">L(T) светимость звезды</button>
+              </div>
+            </div>
+
+            <div class="lab-out-grid">
+              <div class="lab-out"><span>Светимость L / L☉</span><strong id="outLum">1.00 L☉</strong></div>
+              <div class="lab-out"><span>Пик излучения (Вин)</span><strong id="outWien">501 нм</strong></div>
+            </div>
+
+            <canvas id="graphCanvas"></canvas>
+
+            <div class="formula-strip">
+              L/L☉ = (R/R☉)² · (T/T☉)⁴ &nbsp;|&nbsp; λ_max = b / T (закон смещения Вина)
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div><strong>PHYSICS WITHOUT BORDERS (PWB)</strong> · Единый интерактивный раздел «Космос»</div>
+    </div>
+  </footer>
+
+  <script>
+    const CATALOG = [
+      // 8 Planets + Pluto
+      {
+        id: "mercury",
+        group: "planets",
+        sub: "terrestrial",
+        cat: "1-я планета · Земная группа",
+        name: "Меркурий",
+        color: ["#e2e8f0", "#94a3b8", "#334155"],
+        gradient: "radial-gradient(circle at 30% 30%, #e2e8f0, #94a3b8 65%, #334155)",
+        radiusKm: 2439.7,
+        massLabel: "0.055 M⊕",
+        labMassSun: 1.66e-7,
+        labRadSun: 0.0035,
+        labTempK: 440,
+        labG: 3.7,
+        tempLabel: "−180..+430 °C",
+        orbitLabel: "0.39 а. е. (88 сут)",
+        desc: "Ближайшая к Солнцу и наименьшая из 8 планет с сильными перепадами температур.",
+        fact: "Солнечный день на Меркурии длится около 176 земных суток.",
+        interactNote: "Меркурий ускоряется по внутренней орбите и вращается вокруг оси при взаимодействии."
+      },
+      {
+        id: "venus",
+        group: "planets",
+        sub: "terrestrial",
+        cat: "2-я планета · Земная группа",
+        name: "Венера",
+        color: ["#fef08a", "#d97706", "#78350f"],
+        gradient: "radial-gradient(circle at 30% 30%, #fef08a, #d97706 68%, #78350f)",
+        radiusKm: 6051.8,
+        massLabel: "0.815 M⊕",
+        labMassSun: 2.45e-6,
+        labRadSun: 0.0087,
+        labTempK: 737,
+        labG: 8.87,
+        tempLabel: "~465 °C",
+        orbitLabel: "0.72 а. е. (224.7 сут)",
+        desc: "Самая горячая планета Солнечной системы из-за плотной углекислой атмосферы и парникового эффекта.",
+        fact: "Вращается вокруг оси в обратную сторону медленнее, чем обращается вокруг Солнца.",
+        interactNote: "Плотная атмосфера Венеры подсвечивается при взаимодействии, показывая обратное вращение."
+      },
+      {
+        id: "earth",
+        group: "planets",
+        sub: "terrestrial",
+        cat: "3-я планета · Земная группа",
+        name: "Земля",
+        color: ["#7dd3fc", "#2563eb", "#15803d"],
+        gradient: "radial-gradient(circle at 32% 28%, #7dd3fc, #2563eb 58%, #15803d 88%, #0f172a)",
+        radiusKm: 6378.1,
+        massLabel: "1.00 M⊕",
+        labMassSun: 3.00e-6,
+        labRadSun: 0.0092,
+        labTempK: 288,
+        labG: 9.81,
+        tempLabel: "средн. ~15 °C",
+        orbitLabel: "1.00 а. е. (365.25 сут)",
+        desc: "Планета с жидкими океанами, магнитным полем и естественным спутником Луной.",
+        fact: "Наклон оси ~23.44° определяет смену времён года.",
+        interactNote: "У Земли активируется орбитальный импульс и ускоренное движение спутника Луны."
+      },
+      {
+        id: "mars",
+        group: "planets",
+        sub: "terrestrial",
+        cat: "4-я планета · Земная группа",
+        name: "Марс",
+        color: ["#fda4af", "#dc2626", "#7f1d1d"],
+        gradient: "radial-gradient(circle at 30% 30%, #fda4af, #dc2626 65%, #7f1d1d)",
+        radiusKm: 3396.2,
+        massLabel: "0.107 M⊕",
+        labMassSun: 3.23e-7,
+        labRadSun: 0.0049,
+        labTempK: 210,
+        labG: 3.72,
+        tempLabel: "средн. ~−63 °C",
+        orbitLabel: "1.52 а. е. (687 сут)",
+        desc: "Красная планета с оксидами железа на поверхности, полярными шапками и спутниками Фобос и Деймос.",
+        fact: "Вулкан Олимп на Марсе возвышается более чем на 21 км над средним уровнем.",
+        interactNote: "Марс откликается вращением и гравитационным резонансом вдоль орбиты 1.52 а. е."
+      },
+      {
+        id: "jupiter",
+        group: "planets",
+        sub: "giant",
+        cat: "5-я планета · Газовый гигант",
+        name: "Юпитер",
+        color: ["#fef3c7", "#d97706", "#7c2d12"],
+        gradient: "radial-gradient(circle at 32% 30%, #fef3c7, #d97706 50%, #7c2d12 85%)",
+        radiusKm: 71492,
+        massLabel: "317.8 M⊕",
+        labMassSun: 9.54e-4,
+        labRadSun: 0.103,
+        labTempK: 165,
+        labG: 24.79,
+        tempLabel: "~−110 °C (облака)",
+        orbitLabel: "5.20 а. е. (11.86 лет)",
+        desc: "Самая массивная планета с водородно-гелиевой оболочкой, кольцами и крупными спутниками (Ио, Европа, Ганимед, Каллисто).",
+        fact: "Масса Юпитера примерно в 2.5 раза превышает массу всех остальных планет вместе взятых.",
+        interactNote: "Мощное гравитационное поле Юпитера создаёт волны возмущения вокруг планеты."
+      },
+      {
+        id: "saturn",
+        group: "planets",
+        sub: "giant",
+        cat: "6-я планета · Газовый гигант",
+        name: "Сатурн",
+        color: ["#fef08a", "#ca8a04", "#713f12"],
+        gradient: "radial-gradient(circle at 32% 30%, #fef08a, #ca8a04 60%, #713f12)",
+        ringed: true,
+        radiusKm: 60268,
+        massLabel: "95.2 M⊕",
+        labMassSun: 2.86e-4,
+        labRadSun: 0.086,
+        labTempK: 134,
+        labG: 10.44,
+        tempLabel: "~−140 °C (облака)",
+        orbitLabel: "9.58 а. е. (29.45 лет)",
+        desc: "Газовый гигант со знаменитой системой колец из ледяных частиц и спутником Титан.",
+        fact: "Средняя плотность Сатурна (~0.69 г/см³) ниже плотности воды.",
+        interactNote: "Кольца Сатурна подсвечиваются и совершают динамический наклон при взаимодействии."
+      },
+      {
+        id: "uranus",
+        group: "planets",
+        sub: "giant",
+        cat: "7-я планета · Ледяной гигант",
+        name: "Уран",
+        color: ["#a5f3fc", "#22d3ee", "#0e7490"],
+        gradient: "radial-gradient(circle at 30% 30%, #a5f3fc, #22d3ee 65%, #0e7490)",
+        radiusKm: 25559,
+        massLabel: "14.5 M⊕",
+        labMassSun: 4.37e-5,
+        labRadSun: 0.0367,
+        labTempK: 76,
+        labG: 8.69,
+        tempLabel: "~−195 °C",
+        orbitLabel: "19.22 а. е. (84.0 лет)",
+        desc: "Ледяной гигант сине-зелёного оттенка с сильным наклоном оси вращения.",
+        fact: "Ось вращения Урана наклонена почти на 98°.",
+        interactNote: "Уран демонстрирует наклонённое вращение «на боку» и ледяной ореол."
+      },
+      {
+        id: "neptune",
+        group: "planets",
+        sub: "giant",
+        cat: "8-я планета · Ледяной гигант",
+        name: "Нептун",
+        color: ["#93c5fd", "#2563eb", "#1e3a8a"],
+        gradient: "radial-gradient(circle at 30% 30%, #93c5fd, #2563eb 62%, #1e3a8a)",
+        radiusKm: 24764,
+        massLabel: "17.1 M⊕",
+        labMassSun: 5.15e-5,
+        labRadSun: 0.0356,
+        labTempK: 72,
+        labG: 11.15,
+        tempLabel: "~−200 °C",
+        orbitLabel: "30.05 а. е. (164.8 лет)",
+        desc: "Дальняя планета с сильными ветрами и крупным спутником Тритоном.",
+        fact: "Нептун был открыт сначала благодаря расчётам гравитационных возмущений.",
+        interactNote: "В атмосфере Нептуна усиливаются вихревые потоки и орбитальный отклик."
+      },
+      {
+        id: "pluto",
+        group: "planets",
+        sub: "dwarf",
+        cat: "Карликовая планета · Пояс Койпера",
+        name: "Плутон",
+        color: ["#fde68a", "#a8a29e", "#57534e"],
+        gradient: "radial-gradient(circle at 30% 30%, #fde68a, #a8a29e 65%, #57534e)",
+        radiusKm: 1188.3,
+        massLabel: "0.0022 M⊕",
+        labMassSun: 6.55e-9,
+        labRadSun: 0.0017,
+        labTempK: 44,
+        labG: 0.62,
+        tempLabel: "~−229 °C",
+        orbitLabel: "~39.5 а. е. (248 лет)",
+        desc: "Крупнейший известный объект пояса Койпера со спутником Хароном и вытянутой наклонённой орбитой.",
+        fact: "В 2006 году МАС отнёс Плутон к классу карликовых планет.",
+        interactNote: "Плутон проходит по вытянутой наклонённой орбите пояса Койпера с откликом системы."
+      },
+
+      // Stars
+      {
+        id: "sun",
+        group: "stars",
+        cat: "Звезда · Класс G2V",
+        name: "Солнце",
+        color: ["#fef9c3", "#f59e0b", "#ea580c"],
+        gradient: "radial-gradient(circle at 32% 32%, #fef9c3, #f59e0b 60%, #ea580c)",
+        radiusKm: 696340,
+        massLabel: "1.00 M☉",
+        labMassSun: 1.0,
+        labRadSun: 1.0,
+        labTempK: 5778,
+        labG: 27.4,
+        tempLabel: "5 778 K",
+        orbitLabel: "Центр системы",
+        desc: "Жёлтый карлик главной последовательности, на который приходится ~99.86% массы Солнечной системы.",
+        fact: "В ядре Солнца каждую секунду превращаются сотни миллионов тонн водорода.",
+        interactNote: "Солнце испускает корональный импульс и усиливает гравитационное поле системы."
+      },
+      {
+        id: "sirius",
+        group: "stars",
+        cat: "Звезда · Класс A1V",
+        name: "Сириус",
+        color: ["#f0f9ff", "#7dd3fc", "#2563eb"],
+        gradient: "radial-gradient(circle at 32% 32%, #f0f9ff, #7dd3fc 62%, #2563eb)",
+        radiusKm: 1190000,
+        massLabel: "~2.06 M☉",
+        labMassSun: 2.06,
+        labRadSun: 1.71,
+        labTempK: 9940,
+        labG: 29.5,
+        tempLabel: "~9 940 K",
+        orbitLabel: "~8.6 св. лет",
+        desc: "Ярчайшая звезда ночного неба Земли (в созвездии Большого Пса); двойная система с белым карликом Сириус B.",
+        fact: "Светимость Сириуса примерно в 25 раз выше солнечной.",
+        interactNote: "Сириус вспыхивает голубовато-белым излучением и передаёт свои параметры в лабораторию."
+      },
+      {
+        id: "vega",
+        group: "stars",
+        cat: "Звезда · Класс A0V",
+        name: "Вега",
+        color: ["#e0f2fe", "#60a5fa", "#1d4ed8"],
+        gradient: "radial-gradient(circle at 32% 32%, #e0f2fe, #60a5fa 62%, #1d4ed8)",
+        radiusKm: 1640000,
+        massLabel: "~2.14 M☉",
+        labMassSun: 2.14,
+        labRadSun: 2.36,
+        labTempK: 9600,
+        labG: 28.0,
+        tempLabel: "~9 600 K",
+        orbitLabel: "~25 св. лет",
+        desc: "Яркая голубовато-белая звезда созвездия Лиры, быстро вращающаяся вокруг оси.",
+        fact: "Из-за прецессии земной оси Вега становится полярной звездой примерно раз в 12–14 тыс. лет.",
+        interactNote: "Вега ускоряет осевое вращение и излучает энергетическую волну в 3D-сцене."
+      },
+      {
+        id: "betelgeuse",
+        group: "stars",
+        cat: "Звезда · Красный сверхгигант (M1–M2)",
+        name: "Бетельгейзе",
+        color: ["#fecaca", "#ef4444", "#7f1d1d"],
+        gradient: "radial-gradient(circle at 32% 32%, #fecaca, #ef4444 62%, #7f1d1d)",
+        radiusKm: 530000000,
+        massLabel: "~16–19 M☉",
+        labMassSun: 17.5,
+        labRadSun: 50.0,
+        labTempK: 3550,
+        labG: 25.0,
+        tempLabel: "~3 550 K",
+        orbitLabel: "~500–650 св. лет",
+        desc: "Гигантский красный сверхгигант в созвездии Ориона; при помещении на место Солнца превзошёл бы орбиту Марса.",
+        fact: "Находится на поздней стадии эволюции и в перспективе взорвётся как сверхновая.",
+        interactNote: "Конвективные ячейки Бетельгейзе пульсируют, расширяя внешнюю оболочку."
+      },
+      {
+        id: "rigel",
+        group: "stars",
+        cat: "Звезда · Голубой сверхгигант (B8Ia)",
+        name: "Ригель",
+        color: ["#e0f2fe", "#38bdf8", "#1e40af"],
+        gradient: "radial-gradient(circle at 32% 32%, #e0f2fe, #38bdf8 62%, #1e40af)",
+        radiusKm: 55000000,
+        massLabel: "~21 M☉",
+        labMassSun: 21.0,
+        labRadSun: 50.0,
+        labTempK: 12100,
+        labG: 29.0,
+        tempLabel: "~12 100 K",
+        orbitLabel: "~860 св. лет",
+        desc: "Чрезвычайно яркий голубой сверхгигант в созвездии Ориона с огромной светимостью.",
+        fact: "Светимость Ригеля в десятки тысяч раз превышает светимость Солнца.",
+        interactNote: "Ригель испускает мощный высокотемпературный импульс излучения в 3D-пространстве."
+      },
+
+      // Black Holes
+      {
+        id: "sgr_a",
+        group: "black_holes",
+        cat: "Чёрная дыра · Сверхмассивная",
+        name: "Стрелец A*",
+        color: ["#02040a", "#f59e0b", "#fb7185"],
+        gradient: "radial-gradient(circle, #02040a 46%, #f59e0b 68%, #fb7185 85%, transparent 100%)",
+        radiusKm: 12000000,
+        massLabel: "~4.15·10⁶ M☉",
+        labMassSun: 50.0,
+        labRadSun: 17.2,
+        labTempK: 28000,
+        labG: 30.0,
+        tempLabel: "Горизонт событий",
+        orbitLabel: "Центр Млечного Пути",
+        desc: "Сверхмассивная чёрная дыра в центре нашей Галактики.",
+        fact: "Радиус Шварцшильда Стрельца A* составляет около 12 млн км.",
+        interactNote: "Аккреционный диск Стрельца A* раскручивается, создавая гравитационные кольца вокруг горизонта."
+      },
+      {
+        id: "m87_bh",
+        group: "black_holes",
+        cat: "Чёрная дыра · Сверхмассивная",
+        name: "M87*",
+        color: ["#02040a", "#fb923c", "#e11d48"],
+        gradient: "radial-gradient(circle, #02040a 46%, #fb923c 68%, #e11d48 85%, transparent 100%)",
+        radiusKm: 19000000000,
+        massLabel: "~6.5·10⁹ M☉",
+        labMassSun: 50.0,
+        labRadSun: 50.0,
+        labTempK: 34000,
+        labG: 30.0,
+        tempLabel: "Аккреционный диск",
+        orbitLabel: "Галактика M87 (~53 млн св. лет)",
+        desc: "Сверхмассивная чёрная дыра с мощным релятивистским джетом; первая чёрная дыра, получившая прямое радиоинтерферометрическое изображение тени.",
+        fact: "Её масса измеряется миллиардами масс Солнца.",
+        interactNote: "M87* активирует релятивистский джет и усиливает гравитационное искажение вокруг тени."
+      },
+      {
+        id: "cygnus_x1",
+        group: "black_holes",
+        cat: "Чёрная дыра · Звёздной массы",
+        name: "Cygnus X-1",
+        color: ["#02040a", "#38bdf8", "#818cf8"],
+        gradient: "radial-gradient(circle, #02040a 46%, #38bdf8 68%, #818cf8 85%, transparent 100%)",
+        radiusKm: 63,
+        massLabel: "~21 M☉",
+        labMassSun: 21.2,
+        labRadSun: 0.09,
+        labTempK: 32000,
+        labG: 30.0,
+        tempLabel: "Рентгеновский источник",
+        orbitLabel: "Созвездие Лебедя (~7 200 св. лет)",
+        desc: "Один из самых известных рентгеновских источников в двойной системе со сверхгигантом.",
+        fact: "Вещество звезды-компаньона перетекает в аккреционный диск вокруг чёрной дыры.",
+        interactNote: "Рентгеновский аккреционный поток Cygnus X-1 вспыхивает при взаимодействии."
+      },
+
+      // Galaxies, Nebulae & Cosmic Bodies
+      {
+        id: "milky_way",
+        group: "deep",
+        cat: "Галактика · Спиральная с перемычкой",
+        name: "Млечный Путь",
+        color: ["#e9d5ff", "#818cf8", "#22d3ee"],
+        gradient: "radial-gradient(circle at 35% 35%, #e9d5ff, #818cf8 55%, #1e1b4b)",
+        radiusKm: 4.7e17,
+        massLabel: "~10¹² M☉ (с гало)",
+        labMassSun: 50.0,
+        labRadSun: 50.0,
+        labTempK: 6000,
+        labG: 25.0,
+        tempLabel: "Сотни млрд звёзд",
+        orbitLabel: "Диаметр ~100 000 св. лет",
+        desc: "Наша родная галактика, в одном из спиральных рукавов которой расположено Солнце.",
+        fact: "Солнце совершает полный оборот вокруг центра Млечного Пути примерно за 225–250 млн лет.",
+        interactNote: "Спиральные рукава Млечного Пути закручиваются и испускают звёздную волну плотности."
+      },
+      {
+        id: "andromeda",
+        group: "deep",
+        cat: "Галактика · Спиральная (M31)",
+        name: "Андромеда",
+        color: ["#bae6fd", "#6366f1", "#312e81"],
+        gradient: "radial-gradient(circle at 35% 35%, #bae6fd, #6366f1 55%, #1e1b4b)",
+        radiusKm: 7.1e17,
+        massLabel: "~10¹² M☉",
+        labMassSun: 50.0,
+        labRadSun: 50.0,
+        labTempK: 6200,
+        labG: 26.0,
+        tempLabel: "~1 трлн звёзд",
+        orbitLabel: "~2.5 млн св. лет от нас",
+        desc: "Крупнейшая спиральная галактика Местной группы и ближайшая крупная галактика к Млечному Пути.",
+        fact: "Сближается с Млечным Путём со скоростью порядка сотни километров в секунду.",
+        interactNote: "Диск галактики Андромеда вращается в 3D, подсвечивая спиральную структуру и ядро."
+      },
+      {
+        id: "nebula_obj",
+        group: "deep",
+        cat: "Туманность · Облако газа и пыли",
+        name: "Туманность",
+        color: ["#f5d0fe", "#c084fc", "#06b6d4"],
+        gradient: "radial-gradient(circle at 30% 30%, #f5d0fe, #c084fc 55%, #0e7490)",
+        radiusKm: 1.5e14,
+        massLabel: "Газ (H, He) + пыль",
+        labMassSun: 12.0,
+        labRadSun: 45.0,
+        labTempK: 8500,
+        labG: 1.5,
+        tempLabel: "От ~10 до ~10 000 K",
+        orbitLabel: "Межзвёздная среда",
+        desc: "Протяжённые облака газа и пыли: области звездообразования или остатки звёздных оболочек.",
+        fact: "В плотных ядрах туманностей гравитационное сжатие запускает рождение новых звёзд.",
+        interactNote: "Газопылевые волокна туманности расширяются и ионизируются при импульсе."
+      },
+      {
+        id: "asteroid_obj",
+        group: "deep",
+        cat: "Малое тело · Пояс астероидов",
+        name: "Астероид",
+        color: ["#d6d3d1", "#78716c", "#44403c"],
+        gradient: "radial-gradient(circle at 30% 30%, #d6d3d1, #78716c 65%, #44403c)",
+        radiusKm: 250,
+        massLabel: "Камень / металл",
+        labMassSun: 0.1,
+        labRadSun: 0.1,
+        labTempK: 270,
+        labG: 0.5,
+        tempLabel: "Зависит от r",
+        orbitLabel: "Между Марсом и Юпитером",
+        desc: "Каменистое или металлическое тело меньших размеров, чем планета; большинство сосредоточено в главном поясе астероидов.",
+        fact: "Крупнейшее тело пояса астероидов — карликовая планета Церера.",
+        interactNote: "Астероид совершает кувырок в 3D и получает орбитальный импульс."
+      },
+      {
+        id: "comet_obj",
+        group: "deep",
+        cat: "Малое тело · Ледяное ядро и хвост",
+        name: "Комета",
+        color: ["#cffafe", "#22d3ee", "#0369a1"],
+        gradient: "radial-gradient(circle at 30% 30%, #cffafe, #22d3ee 65%, #0369a1)",
+        radiusKm: 5,
+        massLabel: "Лёд + пыль + камень",
+        labMassSun: 0.1,
+        labRadSun: 0.1,
+        labTempK: 320,
+        labG: 0.5,
+        tempLabel: "Сублимация у Солнца",
+        orbitLabel: "Вытянутые орбиты",
+        desc: "При приближении к Солнцу летучие вещества испаряются, создавая кому и газопылевой хвост.",
+        fact: "Хвост кометы направлен преимущественно от Солнца под действием излучения и солнечного ветра.",
+        interactNote: "При взаимодействии усиливается сублимация ядра кометы и раскрывается газовый хвост."
+      },
+      {
+        id: "meteorite_obj",
+        group: "deep",
+        cat: "Малое тело · Достигшее поверхности",
+        name: "Метеорит",
+        color: ["#e7e5e4", "#57534e", "#292524"],
+        gradient: "radial-gradient(circle at 30% 30%, #e7e5e4, #57534e 65%, #292524)",
+        radiusKm: 0.001,
+        massLabel: "От граммов до тонн",
+        labMassSun: 0.1,
+        labRadSun: 0.1,
+        labTempK: 1400,
+        labG: 9.81,
+        tempLabel: "Кора плавления",
+        orbitLabel: "Поверхность планеты",
+        desc: "Твёрдое тело космического происхождения, которое не сгорело полностью в атмосфере и упало на поверхность.",
+        fact: "По составу метеориты делят на каменные, железные и железокаменные.",
+        interactNote: "Метеорит демонстрирует тепловой след входа в атмосферу и быстрое вращение."
+      },
+      {
+        id: "neutron_star",
+        group: "deep",
+        cat: "Компактный остаток · Нейтронная звезда",
+        name: "Нейтронная звезда",
+        color: ["#e0f2fe", "#38bdf8", "#0284c7"],
+        gradient: "radial-gradient(circle at 30% 30%, #e0f2fe, #38bdf8 65%, #0284c7)",
+        radiusKm: 11,
+        massLabel: "~1.4–2.1 M☉",
+        labMassSun: 1.8,
+        labRadSun: 0.1,
+        labTempK: 35000,
+        labG: 30.0,
+        tempLabel: "~10⁶ K (молодые)",
+        orbitLabel: "Плотность ~10¹⁷ кг/м³",
+        desc: "Сверхплотный остаток массивной звезды, состоящий в основном из нейтронов; при быстром вращении наблюдается как пульсар.",
+        fact: "Масса порядка солнечной сжата в шар радиусом около 10–12 км.",
+        interactNote: "Нейтронная звезда ускоряет пульсарное вращение и испускает узкие магнитные лучи."
+      },
+      {
+        id: "supernova_obj",
+        group: "deep",
+        cat: "Явление · Взрыв звезды",
+        name: "Сверхновая",
+        color: ["#fef08a", "#fb7185", "#9333ea"],
+        gradient: "radial-gradient(circle at 30% 30%, #fef08a, #fb7185 58%, #9333ea)",
+        radiusKm: 1e13,
+        massLabel: "Выброс оболочки",
+        labMassSun: 15.0,
+        labRadSun: 50.0,
+        labTempK: 35000,
+        labG: 20.0,
+        tempLabel: "Экстремальный нагрев",
+        orbitLabel: "Финал массивных звёзд",
+        desc: "Катастрофический взрыв звезды с резким ростом светимости и выбросом тяжёлых элементов в межзвёздную среду.",
+        fact: "Взрывы сверхновых обогащают галактики элементами тяжелее железа.",
+        interactNote: "Сверхновая создаёт расширяющуюся ударную волну оболочки в 3D-сцене."
+      }
+    ];
+
+    const byId = Object.fromEntries(CATALOG.map((item) => [item.id, item]));
+
+    // 3D Canvas Engine
+    const canvas3d = document.getElementById("space3dCanvas");
+    const ctx3d = canvas3d.getContext("2d");
+
+    let sceneTab = "solar"; // "solar" | "stars_bh" | "deep"
+    let selectedObjId = "earth";
+    let hoveredObjId = null;
+    let isPlaying = true;
+    let showOrbits = true;
+    let showLabels = true;
+    let speedMult = 1.0;
+    let simAngle = 0.7;
+    let interactionPulse = 0; // decays from 1.0 to 0.0 when user interacts with any object
+
+    // 3D camera angles & zoom
+    let rotX = 0.48;
+    let rotY = 0.25;
+    let zoomLevel = 1.0;
+    let isDragging = false;
+    let dragStartX = 0;
+    let dragStartY = 0;
+    let dragMoved = false;
+    let hitList3d = [];
+
+    const bgStars = Array.from({ length: 160 }, (_, i) => ({
+      nx: ((i * 113) % 1000) / 1000,
+      ny: ((i * 71) % 1000) / 1000,
+      r: (i % 4 === 0) ? 1.6 : 0.9,
+      a: 0.28 + ((i * 37) % 65) / 100
+    }));
+
+    const solarOrbits = [
+      { id: "mercury", rNorm: 0.12, spd: 1.7, size: 4.5, inc: 0.08 },
+      { id: "venus", rNorm: 0.18, spd: -1.25, size: 7.2, inc: -0.05 },
+      { id: "earth", rNorm: 0.25, spd: 1.0, size: 7.8, inc: 0.02, moon: true },
+      { id: "mars", rNorm: 0.32, spd: 0.8, size: 5.8, inc: 0.06 },
+      { id: "jupiter", rNorm: 0.42, spd: 0.5, size: 14.5, inc: -0.03 },
+      { id: "saturn", rNorm: 0.53, spd: 0.36, size: 12.0, inc: 0.05, ringed: true },
+      { id: "uranus", rNorm: 0.63, spd: 0.25, size: 9.2, inc: -0.07 },
+      { id: "neptune", rNorm: 0.72, spd: 0.19, size: 9.0, inc: 0.04 },
+      { id: "pluto", rNorm: 0.82, spd: 0.14, size: 4.2, inc: 0.22, ecc: 1.22 }
+    ];
+
+    function resize3d() {
+      const parent = canvas3d.parentElement;
+      const rect = parent.getBoundingClientRect();
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      canvas3d.width = Math.max(300, Math.floor(rect.width * dpr));
+      canvas3d.height = Math.max(280, Math.floor(rect.height * dpr));
+      ctx3d.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+
+    function project3D(x, y, z, cx, cy, focal) {
+      const cosY = Math.cos(rotY);
+      const sinY = Math.sin(rotY);
+      const x1 = x * cosY - z * sinY;
+      const z1 = x * sinY + z * cosY;
+
+      const cosX = Math.cos(rotX);
+      const sinX = Math.sin(rotX);
+      const y2 = y * cosX - z1 * sinX;
+      const z2 = y * sinX + z1 * cosX;
+
+      const scale = (focal / Math.max(220, focal + z2)) * zoomLevel;
+      return {
+        sx: cx + x1 * scale,
+        sy: cy + y2 * scale,
+        scale,
+        depth: z2
+      };
+    }
+
+    function drawInteractionWave(sx, sy, rad, objId) {
+      if (interactionPulse <= 0.01 || selectedObjId !== objId) return;
+      ctx3d.save();
+      const waveR = rad + (1 - interactionPulse) * 34 + 6;
+      ctx3d.beginPath();
+      ctx3d.arc(sx, sy, waveR, 0, Math.PI * 2);
+      ctx3d.strokeStyle = `rgba(245, 158, 11, ${(interactionPulse * 0.85).toFixed(2)})`;
+      ctx3d.lineWidth = 2.4;
+      ctx3d.stroke();
+      ctx3d.restore();
+    }
+
+    function drawSphere3D(sx, sy, r, item, isSel, isHov) {
+      const pulseBoost = (isSel && interactionPulse > 0) ? (1 + interactionPulse * 0.16) : 1;
+      const rad = Math.max(2.5, r * pulseBoost);
+      const colors = item.color;
+
+      drawInteractionWave(sx, sy, rad, item.id);
+
+      // Star corona / supernova shell / comet tail / pulsar beams / galaxy arms
+      if (item.group === "stars") {
+        ctx3d.save();
+        const corona = ctx3d.createRadialGradient(sx, sy, rad * 0.5, sx, sy, rad * 2.1);
+        corona.addColorStop(0, `${colors[1]}88`);
+        corona.addColorStop(1, "rgba(0,0,0,0)");
+        ctx3d.beginPath();
+        ctx3d.arc(sx, sy, rad * 2.1, 0, Math.PI * 2);
+        ctx3d.fillStyle = corona;
+        ctx3d.fill();
+        ctx3d.restore();
+      } else if (item.id === "comet_obj") {
+        ctx3d.save();
+        const tailLen = rad * (4.2 + interactionPulse * 2.0);
+        const tg = ctx3d.createLinearGradient(sx, sy, sx + tailLen, sy - tailLen * 0.35);
+        tg.addColorStop(0, "rgba(34, 211, 238, 0.72)");
+        tg.addColorStop(1, "rgba(34, 211, 238, 0)");
+        ctx3d.beginPath();
+        ctx3d.moveTo(sx, sy - rad * 0.7);
+        ctx3d.lineTo(sx + tailLen, sy - tailLen * 0.35);
+        ctx3d.lineTo(sx, sy + rad * 0.7);
+        ctx3d.closePath();
+        ctx3d.fillStyle = tg;
+        ctx3d.fill();
+        ctx3d.restore();
+      } else if (item.id === "neutron_star") {
+        ctx3d.save();
+        ctx3d.translate(sx, sy);
+        ctx3d.rotate(simAngle * 3.5);
+        ctx3d.strokeStyle = "rgba(56, 189, 248, 0.75)";
+        ctx3d.lineWidth = 2;
+        ctx3d.beginPath();
+        ctx3d.moveTo(-rad * 2.8, 0);
+        ctx3d.lineTo(rad * 2.8, 0);
+        ctx3d.stroke();
+        ctx3d.restore();
+      } else if (item.id === "milky_way" || item.id === "andromeda") {
+        ctx3d.save();
+        ctx3d.translate(sx, sy);
+        ctx3d.rotate(simAngle * 0.45);
+        ctx3d.strokeStyle = "rgba(165, 180, 252, 0.45)";
+        ctx3d.lineWidth = 1.6;
+        for (let arm = 0; arm < 2; arm++) {
+          ctx3d.beginPath();
+          for (let t = 0; t <= 24; t++) {
+            const frac = t / 24;
+            const ang = frac * 3.2 + arm * Math.PI;
+            const rr = rad * (0.4 + frac * 1.6);
+            const ax = Math.cos(ang) * rr;
+            const ay = Math.sin(ang) * rr * 0.55;
+            if (t === 0) ctx3d.moveTo(ax, ay);
+            else ctx3d.lineTo(ax, ay);
+          }
+          ctx3d.stroke();
+        }
+        ctx3d.restore();
+      } else if (item.id === "supernova_obj") {
+        ctx3d.save();
+        ctx3d.beginPath();
+        ctx3d.arc(sx, sy, rad * (1.55 + interactionPulse * 0.45), 0, Math.PI * 2);
+        ctx3d.strokeStyle = "rgba(251, 113, 133, 0.65)";
+        ctx3d.lineWidth = 1.8;
+        ctx3d.stroke();
+        ctx3d.restore();
+      }
+
+      if (isSel || isHov) {
+        ctx3d.save();
+        ctx3d.beginPath();
+        ctx3d.arc(sx, sy, rad + 6, 0, Math.PI * 2);
+        ctx3d.strokeStyle = isSel ? "#22d3ee" : "rgba(255,255,255,0.75)";
+        ctx3d.lineWidth = isSel ? 2.2 : 1.5;
+        ctx3d.stroke();
+        ctx3d.restore();
+      }
+
+      if (item.ringed) {
+        ctx3d.save();
+        ctx3d.translate(sx, sy);
+        ctx3d.rotate(-0.35 + rotX * 0.25 + (isSel ? interactionPulse * 0.2 : 0));
+        ctx3d.beginPath();
+        ctx3d.ellipse(0, 0, rad * 1.9, rad * 0.46, 0, 0, Math.PI * 2);
+        ctx3d.strokeStyle = "rgba(253, 230, 138, 0.82)";
+        ctx3d.lineWidth = Math.max(1.4, rad * 0.16);
+        ctx3d.stroke();
+        ctx3d.restore();
+      }
+
+      const g = ctx3d.createRadialGradient(sx - rad * 0.32, sy - rad * 0.32, rad * 0.1, sx, sy, rad);
+      g.addColorStop(0, colors[0]);
+      g.addColorStop(0.65, colors[1]);
+      g.addColorStop(1, colors[2]);
+      ctx3d.beginPath();
+      ctx3d.arc(sx, sy, rad, 0, Math.PI * 2);
+      ctx3d.fillStyle = g;
+      ctx3d.fill();
+    }
+
+    function drawBlackHole3D(sx, sy, r, item, isSel, isHov) {
+      const pulseBoost = (isSel && interactionPulse > 0) ? (1 + interactionPulse * 0.14) : 1;
+      const rad = Math.max(8, r * pulseBoost);
+      drawInteractionWave(sx, sy, rad * 1.5, item.id);
+
+      ctx3d.save();
+      const dg = ctx3d.createRadialGradient(sx, sy, rad * 0.85, sx, sy, rad * 2.55);
+      dg.addColorStop(0, "rgba(0,0,0,1)");
+      dg.addColorStop(0.38, `${item.color[1]}cc`);
+      dg.addColorStop(0.68, `${item.color[2]}66`);
+      dg.addColorStop(1, "rgba(99, 102, 241, 0)");
+
+      ctx3d.beginPath();
+      ctx3d.ellipse(sx, sy, rad * 2.45, rad * 0.92, -0.25 + rotX * 0.2 + simAngle * 0.12, 0, Math.PI * 2);
+      ctx3d.fillStyle = dg;
+      ctx3d.fill();
+
+      // Relativistic jet indicator for M87* or Cygnus X-1
+      if (item.id === "m87_bh" || item.id === "cygnus_x1") {
+        ctx3d.strokeStyle = "rgba(125, 211, 252, 0.55)";
+        ctx3d.lineWidth = item.id === "m87_bh" ? 2.5 : 1.5;
+        ctx3d.beginPath();
+        ctx3d.moveTo(sx, sy - rad * 0.8);
+        ctx3d.lineTo(sx + rad * 1.3, sy - rad * 3.1);
+        ctx3d.stroke();
+      }
+
+      ctx3d.beginPath();
+      ctx3d.arc(sx, sy, rad, 0, Math.PI * 2);
+      ctx3d.fillStyle = "#02040a";
+      ctx3d.fill();
+      ctx3d.lineWidth = 1.6;
+      ctx3d.strokeStyle = isSel ? "#22d3ee" : "#fde047";
+      ctx3d.stroke();
+
+      if (isSel || isHov) {
+        ctx3d.beginPath();
+        ctx3d.arc(sx, sy, rad + 6, 0, Math.PI * 2);
+        ctx3d.strokeStyle = isSel ? "#22d3ee" : "#fff";
+        ctx3d.lineWidth = 2;
+        ctx3d.stroke();
+      }
+      ctx3d.restore();
+    }
+
+    function drawLabel3D(sx, sy, offset, text, active) {
+      if (!showLabels) return;
+      ctx3d.save();
+      ctx3d.font = active ? "600 12px Inter, sans-serif" : "500 11px Inter, sans-serif";
+      ctx3d.textAlign = "center";
+      ctx3d.fillStyle = active ? "#67e8f9" : "rgba(226, 232, 240, 0.86)";
+      ctx3d.fillText(text, sx, sy + offset);
+      ctx3d.restore();
+    }
+
+    function render3D() {
+      const w = canvas3d.clientWidth || 960;
+      const h = canvas3d.clientHeight || 550;
+      const cx = w * 0.5;
+      const cy = h * 0.52;
+      const focal = Math.max(480, Math.min(w, h) * 1.15);
+      hitList3d = [];
+
+      ctx3d.clearRect(0, 0, w, h);
+
+      for (const s of bgStars) {
+        ctx3d.beginPath();
+        ctx3d.arc(s.nx * w, s.ny * h, s.r, 0, Math.PI * 2);
+        ctx3d.fillStyle = `rgba(248, 250, 252, ${s.a})`;
+        ctx3d.fill();
+      }
+
+      const drawQueue = [];
+
+      if (sceneTab === "solar") {
+        const baseR = Math.min(w, h) * 0.44;
+        const sunProj = project3D(0, 0, 0, cx, cy, focal);
+        drawQueue.push({
+          depth: sunProj.depth,
+          draw: () => {
+            drawSphere3D(sunProj.sx, sunProj.sy, 21 * sunProj.scale, byId.sun, selectedObjId === "sun", hoveredObjId === "sun");
+            drawLabel3D(sunProj.sx, sunProj.sy, 21 * sunProj.scale + 14, "Солнце", selectedObjId === "sun" || hoveredObjId === "sun");
+          },
+          hit: { id: "sun", x: sunProj.sx, y: sunProj.sy, r: Math.max(18, 23 * sunProj.scale) }
+        });
+
+        solarOrbits.forEach((orb, idx) => {
+          const rad = baseR * orb.rNorm;
+          const eccMult = orb.ecc || 1.0;
+
+          if (showOrbits) {
+            ctx3d.save();
+            ctx3d.beginPath();
+            const steps = 72;
+            for (let i = 0; i <= steps; i++) {
+              const a = (i / steps) * Math.PI * 2;
+              const ox = Math.cos(a) * rad * eccMult;
+              const oz = Math.sin(a) * rad;
+              const oy = Math.sin(a + idx) * rad * orb.inc;
+              const pt = project3D(ox, oy, oz, cx, cy, focal);
+              if (i === 0) ctx3d.moveTo(pt.sx, pt.sy);
+              else ctx3d.lineTo(pt.sx, pt.sy);
+            }
+            ctx3d.closePath();
+            ctx3d.strokeStyle = selectedObjId === orb.id ? "rgba(34, 211, 238, 0.5)" : "rgba(148, 163, 184, 0.16)";
+            ctx3d.lineWidth = selectedObjId === orb.id ? 1.5 : 1;
+            ctx3d.stroke();
+            ctx3d.restore();
+          }
+
+          const angle = simAngle * orb.spd + idx * 0.75;
+          const px = Math.cos(angle) * rad * eccMult;
+          const pz = Math.sin(angle) * rad;
+          const py = Math.sin(angle + idx) * rad * orb.inc;
+          const pProj = project3D(px, py, pz, cx, cy, focal);
+          const item = byId[orb.id];
+
+          drawQueue.push({
+            depth: pProj.depth,
+            draw: () => {
+              drawSphere3D(pProj.sx, pProj.sy, orb.size * pProj.scale, item, selectedObjId === orb.id, hoveredObjId === orb.id);
+              if (orb.moon) {
+                const ma = simAngle * (4.5 + (selectedObjId === "earth" ? interactionPulse * 5 : 0));
+                const mx = pProj.sx + Math.cos(ma) * 16 * pProj.scale;
+                const my = pProj.sy + Math.sin(ma) * 8 * pProj.scale;
+                ctx3d.beginPath();
+                ctx3d.arc(mx, my, Math.max(1.8, 2.3 * pProj.scale), 0, Math.PI * 2);
+                ctx3d.fillStyle = "#cbd5e1";
+                ctx3d.fill();
+              }
+              drawLabel3D(pProj.sx, pProj.sy, orb.size * pProj.scale + 12, item.name, selectedObjId === orb.id || hoveredObjId === orb.id);
+            },
+            hit: { id: orb.id, x: pProj.sx, y: pProj.sy, r: Math.max(14, orb.size * pProj.scale + 5) }
+          });
+        });
+      } else if (sceneTab === "stars_bh") {
+        const nodes = [
+          { id: "sun", x: -170, y: 0, z: 20, r: 16, bh: false },
+          { id: "sirius", x: -75, y: -65, z: -30, r: 14, bh: false },
+          { id: "vega", x: -70, y: 68, z: 35, r: 14, bh: false },
+          { id: "betelgeuse", x: 35, y: -55, z: -20, r: 24, bh: false },
+          { id: "rigel", x: 38, y: 65, z: 25, r: 18, bh: false },
+          { id: "sgr_a", x: 145, y: -50, z: 10, r: 15, bh: true },
+          { id: "m87_bh", x: 215, y: 45, z: -25, r: 21, bh: true },
+          { id: "cygnus_x1", x: 130, y: 80, z: 40, r: 12, bh: true }
+        ];
+        for (const n of nodes) {
+          const pr = project3D(n.x, n.y, n.z, cx, cy, focal);
+          const item = byId[n.id];
+          drawQueue.push({
+            depth: pr.depth,
+            draw: () => {
+              if (n.bh) {
+                drawBlackHole3D(pr.sx, pr.sy, n.r * pr.scale, item, selectedObjId === n.id, hoveredObjId === n.id);
+              } else {
+                drawSphere3D(pr.sx, pr.sy, n.r * pr.scale, item, selectedObjId === n.id, hoveredObjId === n.id);
+              }
+              drawLabel3D(pr.sx, pr.sy, n.r * pr.scale + 15, item.name, selectedObjId === n.id || hoveredObjId === n.id);
+            },
+            hit: { id: n.id, x: pr.sx, y: pr.sy, r: Math.max(16, n.r * pr.scale + 5) }
+          });
+        }
+      } else {
+        const deepNodes = [
+          { id: "milky_way", x: -175, y: -50, z: 15, r: 24 },
+          { id: "andromeda", x: -155, y: 68, z: -25, r: 22 },
+          { id: "nebula_obj", x: -45, y: -10, z: 30, r: 21 },
+          { id: "asteroid_obj", x: 55, y: -68, z: -10, r: 11 },
+          { id: "comet_obj", x: 65, y: 12, z: 20, r: 11 },
+          { id: "meteorite_obj", x: 55, y: 76, z: -20, r: 10 },
+          { id: "neutron_star", x: 165, y: -42, z: 10, r: 13 },
+          { id: "supernova_obj", x: 175, y: 55, z: -15, r: 19 }
+        ];
+        for (const n of deepNodes) {
+          const pr = project3D(n.x, n.y, n.z, cx, cy, focal);
+          const item = byId[n.id];
+          drawQueue.push({
+            depth: pr.depth,
+            draw: () => {
+              drawSphere3D(pr.sx, pr.sy, n.r * pr.scale, item, selectedObjId === n.id, hoveredObjId === n.id);
+              drawLabel3D(pr.sx, pr.sy, n.r * pr.scale + 15, item.name, selectedObjId === n.id || hoveredObjId === n.id);
+            },
+            hit: { id: n.id, x: pr.sx, y: pr.sy, r: Math.max(16, n.r * pr.scale + 5) }
+          });
+        }
+      }
+
+      drawQueue.sort((a, b) => b.depth - a.depth);
+      for (const entry of drawQueue) {
+        entry.draw();
+        hitList3d.push(entry.hit);
+      }
+    }
+
+    function updateSelectedPanel() {
+      const item = byId[selectedObjId] || byId.earth;
+      document.getElementById("selOrb").style.background = item.gradient;
+      document.getElementById("selCat").textContent = item.cat;
+      document.getElementById("selTitle").textContent = item.name;
+      document.getElementById("selDesc").textContent = `${item.desc} Факт: ${item.fact}`;
+      document.getElementById("selMetrics").innerHTML = `
+        <div class="sel-metric"><span>Масса</span><strong>${item.massLabel}</strong></div>
+        <div class="sel-metric"><span>Радиус / масштаб</span><strong>${item.radiusKm.toLocaleString("ru-RU")} км</strong></div>
+        <div class="sel-metric"><span>Температура / режим</span><strong>${item.tempLabel}</strong></div>
+        <div class="sel-metric"><span>Орбита / положение</span><strong>${item.orbitLabel}</strong></div>
+      `;
+      document.getElementById("interactStatus").textContent = item.interactNote;
+
+      document.querySelectorAll(".obj-pill").forEach((b) => {
+        b.classList.toggle("selected", b.dataset.id === item.id);
+      });
+    }
+
+    function selectObject3D(id, switchTabIfNeeded = false) {
+      if (!byId[id]) return;
+      selectedObjId = id;
+      if (switchTabIfNeeded) {
+        const grp = byId[id].group;
+        if (grp === "planets" || id === "sun") setSceneTab("solar", false);
+        else if (grp === "stars" || grp === "black_holes") setSceneTab("stars_bh", false);
+        else setSceneTab("deep", false);
+      }
+      updateSelectedPanel();
+      render3D();
+    }
+
+    function setSceneTab(tab, autoSelect = true) {
+      sceneTab = tab;
+      document.getElementById("viewSolarBtn").classList.toggle("active", tab === "solar");
+      document.getElementById("viewStarsBhBtn").classList.toggle("active", tab === "stars_bh");
+      document.getElementById("viewDeepBtn").classList.toggle("active", tab === "deep");
+      if (autoSelect) {
+        if (tab === "solar") selectedObjId = "earth";
+        else if (tab === "stars_bh") selectedObjId = "betelgeuse";
+        else selectedObjId = "milky_way";
+        updateSelectedPanel();
+      }
+      render3D();
+    }
+
+    // Build quick object selector pills
+    const quickBar = document.getElementById("quickObjBar");
+    quickBar.innerHTML = CATALOG.map(
+      (item) => `<button class="obj-pill ${item.id === selectedObjId ? "selected" : ""}" data-id="${item.id}" type="button">${item.name}</button>`
+    ).join("");
+    quickBar.querySelectorAll(".obj-pill").forEach((btn) => {
+      btn.addEventListener("click", () => selectObject3D(btn.dataset.id, true));
+    });
+
+    // Universal object interactions
+    document.getElementById("focusObjBtn").addEventListener("click", () => {
+      zoomLevel = Math.min(2.2, +(zoomLevel + 0.35).toFixed(2));
+      interactionPulse = 0.7;
+      document.getElementById("interactStatus").textContent =
+        `Приближение к объекту «${byId[selectedObjId].name}» (масштаб ${zoomLevel.toFixed(2)}×).`;
+      render3D();
+    });
+
+    document.getElementById("exciteObjBtn").addEventListener("click", () => {
+      interactionPulse = 1.0;
+      simAngle += 0.25;
+      document.getElementById("interactStatus").textContent =
+        `Импульс взаимодействия для «${byId[selectedObjId].name}»: ${byId[selectedObjId].interactNote}`;
+      render3D();
+    });
+
+    document.getElementById("compareObjBtn").addEventListener("click", () => {
+      selB.value = selectedObjId;
+      renderComparison();
+      document.getElementById("compare").scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+
+    document.getElementById("toLabObjBtn").addEventListener("click", () => {
+      const item = byId[selectedObjId];
+      labStarMassSlider.value = Math.max(0.1, Math.min(50, item.labMassSun || 1.0));
+      labRadStarSlider.value = Math.max(0.1, Math.min(50, item.labRadSun || 1.0));
+      labTempStarSlider.value = Math.max(2500, Math.min(35000, item.labTempK || 5778));
+      labGSlider.value = Math.max(0.5, Math.min(30, item.labG || 9.81));
+      updateLab();
+      document.getElementById("lab").scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+
+    // Pointer drag rotation, wheel zoom, click selection
+    canvas3d.addEventListener("mousedown", (e) => {
+      isDragging = true;
+      dragMoved = false;
+      dragStartX = e.clientX;
+      dragStartY = e.clientY;
+      canvas3d.classList.add("dragging");
+    });
+
+    window.addEventListener("mousemove", (e) => {
+      if (isDragging) {
+        const dx = e.clientX - dragStartX;
+        const dy = e.clientY - dragStartY;
+        if (Math.hypot(dx, dy) > 3) dragMoved = true;
+        rotY += dx * 0.008;
+        rotX = Math.max(-1.15, Math.min(1.15, rotX + dy * 0.008));
+        dragStartX = e.clientX;
+        dragStartY = e.clientY;
+        render3D();
+        return;
+      }
+      const rect = canvas3d.getBoundingClientRect();
+      const mx = e.clientX - rect.left;
+      const my = e.clientY - rect.top;
+      let found = null;
+      for (let i = hitList3d.length - 1; i >= 0; i--) {
+        const hItem = hitList3d[i];
+        if (Math.hypot(mx - hItem.x, my - hItem.y) <= hItem.r) {
+          found = hItem.id;
+          break;
+        }
+      }
+      hoveredObjId = found;
+    });
+
+    window.addEventListener("mouseup", () => {
+      isDragging = false;
+      canvas3d.classList.remove("dragging");
+    });
+
+    canvas3d.addEventListener("click", (e) => {
+      if (dragMoved) return;
+      const rect = canvas3d.getBoundingClientRect();
+      const mx = e.clientX - rect.left;
+      const my = e.clientY - rect.top;
+      for (let i = hitList3d.length - 1; i >= 0; i--) {
+        const hItem = hitList3d[i];
+        if (Math.hypot(mx - hItem.x, my - hItem.y) <= hItem.r) {
+          selectObject3D(hItem.id, false);
+          interactionPulse = 0.65;
+          break;
+        }
+      }
+    });
+
+    canvas3d.addEventListener("wheel", (e) => {
+      e.preventDefault();
+      zoomLevel = Math.max(0.55, Math.min(2.3, zoomLevel + (e.deltaY < 0 ? 0.1 : -0.1)));
+      render3D();
+    }, { passive: false });
+
+    document.getElementById("zoomInBtn").addEventListener("click", () => {
+      zoomLevel = Math.min(2.3, +(zoomLevel + 0.15).toFixed(2));
+      render3D();
+    });
+    document.getElementById("zoomOutBtn").addEventListener("click", () => {
+      zoomLevel = Math.max(0.55, +(zoomLevel - 0.15).toFixed(2));
+      render3D();
+    });
+    document.getElementById("resetCamBtn").addEventListener("click", () => {
+      rotX = 0.48;
+      rotY = 0.25;
+      zoomLevel = 1.0;
+      render3D();
+    });
+
+    document.getElementById("viewSolarBtn").addEventListener("click", () => setSceneTab("solar", true));
+    document.getElementById("viewStarsBhBtn").addEventListener("click", () => setSceneTab("stars_bh", true));
+    document.getElementById("viewDeepBtn").addEventListener("click", () => setSceneTab("deep", true));
+
+    const playPauseBtn = document.getElementById("playPauseBtn");
+    playPauseBtn.addEventListener("click", () => {
+      isPlaying = !isPlaying;
+      playPauseBtn.textContent = isPlaying ? "⏸ Пауза" : "▶ Старт";
+      playPauseBtn.classList.toggle("cyan-active", isPlaying);
+    });
+
+    const toggleOrbitsBtn = document.getElementById("toggleOrbitsBtn");
+    toggleOrbitsBtn.addEventListener("click", () => {
+      showOrbits = !showOrbits;
+      toggleOrbitsBtn.classList.toggle("cyan-active", showOrbits);
+      render3D();
+    });
+
+    const toggleLabelsBtn = document.getElementById("toggleLabelsBtn");
+    toggleLabelsBtn.addEventListener("click", () => {
+      showLabels = !showLabels;
+      toggleLabelsBtn.classList.toggle("cyan-active", showLabels);
+      render3D();
+    });
+
+    const speedRange = document.getElementById("speedRange");
+    const speedLabel = document.getElementById("speedLabel");
+    speedRange.addEventListener("input", () => {
+      speedMult = parseFloat(speedRange.value);
+      speedLabel.textContent = `${speedMult.toFixed(1)}×`;
+    });
+
+    function animate3D() {
+      if (isPlaying) {
+        simAngle += 0.009 * speedMult;
+      }
+      if (interactionPulse > 0) {
+        interactionPulse = Math.max(0, interactionPulse - 0.015);
+      }
+      render3D();
+      requestAnimationFrame(animate3D);
+    }
+
+    // Catalog Cards Rendering
+    function makeCardHTML(item, tagClass = "") {
+      return `
+        <article class="obj-card" data-id="${item.id}">
+          <div>
+            <div class="card-top">
+              <div class="mini-orb" style="background:${item.gradient};"></div>
+              <div>
+                <span class="tag ${tagClass}">${item.cat}</span>
+                <h3 style="font-size:1.12rem;">${item.name}</h3>
+              </div>
+            </div>
+            <div class="card-stats" style="margin-top:11px;">
+              <div><span>Масса</span><strong>${item.massLabel}</strong></div>
+              <div><span>Темп. / режим</span><strong>${item.tempLabel}</strong></div>
+            </div>
+            <p class="summary" style="margin-top:10px;">${item.desc}</p>
+          </div>
+          <div class="card-foot">Взаимодействовать в 3D →</div>
+        </article>
+      `;
+    }
+
+    function bindCardClicks(container) {
+      container.querySelectorAll(".obj-card").forEach((card) => {
+        card.addEventListener("click", () => {
+          selectObject3D(card.dataset.id, true);
+          interactionPulse = 0.85;
+          document.getElementById("scene3d").scrollIntoView({ behavior: "smooth", block: "start" });
+        });
+      });
+    }
+
+    const planetsGrid = document.getElementById("planetsCardsGrid");
+    function renderPlanetsCatalog(filter = "all") {
+      const list = CATALOG.filter((i) => i.group === "planets" && (filter === "all" || i.sub === filter));
+      planetsGrid.innerHTML = list.map((i) => makeCardHTML(i, i.sub === "dwarf" ? "amber" : "")).join("");
+      bindCardClicks(planetsGrid);
+    }
+
+    document.querySelectorAll("#planetFilters .pill-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll("#planetFilters .pill-btn").forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        renderPlanetsCatalog(btn.dataset.pfilter);
+      });
+    });
+
+    const starsGrid = document.getElementById("starsCardsGrid");
+    starsGrid.innerHTML = CATALOG.filter((i) => i.group === "stars").map((i) => makeCardHTML(i, "amber")).join("");
+    bindCardClicks(starsGrid);
+
+    const bhGrid = document.getElementById("bhCardsGrid");
+    bhGrid.innerHTML = CATALOG.filter((i) => i.group === "black_holes").map((i) => makeCardHTML(i, "rose")).join("");
+    bindCardClicks(bhGrid);
+
+    const deepGrid = document.getElementById("deepCardsGrid");
+    deepGrid.innerHTML = CATALOG.filter((i) => i.group === "deep").map((i) => makeCardHTML(i, "emerald")).join("");
+    bindCardClicks(deepGrid);
+
+    // Comparison Tool
+    const selA = document.getElementById("cmpSelectA");
+    const selB = document.getElementById("cmpSelectB");
+    const cmpTable = document.getElementById("cmpTable");
+
+    selA.innerHTML = CATALOG.map((i) => `<option value="${i.id}">${i.name}</option>`).join("");
+    selB.innerHTML = CATALOG.map((i) => `<option value="${i.id}">${i.name}</option>`).join("");
+    selA.value = "earth";
+    selB.value = "sgr_a";
+
+    function renderComparison() {
+      const a = byId[selA.value] || CATALOG[0];
+      const b = byId[selB.value] || CATALOG[1];
+      cmpTable.innerHTML = `
+        <thead>
+          <tr>
+            <th>Характеристика</th>
+            <th>${a.name}</th>
+            <th>${b.name}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Категория</td><td>${a.cat}</td><td>${b.cat}</td></tr>
+          <tr><td>Масса</td><td>${a.massLabel}</td><td>${b.massLabel}</td></tr>
+          <tr><td>Радиус / масштаб</td><td>${a.radiusKm.toLocaleString("ru-RU")} км</td><td>${b.radiusKm.toLocaleString("ru-RU")} км</td></tr>
+          <tr><td>Температура / режим</td><td>${a.tempLabel}</td><td>${b.tempLabel}</td></tr>
+          <tr><td>Орбита / положение</td><td>${a.orbitLabel}</td><td>${b.orbitLabel}</td></tr>
+          <tr><td>Ключевой факт</td><td>${a.fact}</td><td>${b.fact}</td></tr>
+        </tbody>
+      `;
+    }
+
+    selA.addEventListener("change", renderComparison);
+    selB.addEventListener("change", renderComparison);
+
+    // Physics Lab & Graph
+    const labMassSlider = document.getElementById("labMassSlider");
+    const labGSlider = document.getElementById("labGSlider");
+    const labStarMassSlider = document.getElementById("labStarMassSlider");
+    const labOrbitRSlider = document.getElementById("labOrbitRSlider");
+    const labRadStarSlider = document.getElementById("labRadStarSlider");
+    const labTempStarSlider = document.getElementById("labTempStarSlider");
+    const graphCanvas = document.getElementById("graphCanvas");
+    const gCtx = graphCanvas.getContext("2d");
+
+    let graphMode = "orb";
+
+    function drawGraph(M_sun, a_au, R_sun, T_k) {
+      const rect = graphCanvas.getBoundingClientRect();
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      graphCanvas.width = Math.max(260, Math.floor(rect.width * dpr));
+      graphCanvas.height = Math.max(180, Math.floor(rect.height * dpr));
+      gCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      const w = graphCanvas.clientWidth || 500;
+      const h = graphCanvas.clientHeight || 220;
+      const padL = 44;
+      const padR = 16;
+      const padT = 16;
+      const padB = 30;
+      const plotW = Math.max(60, w - padL - padR);
+      const plotH = Math.max(60, h - padT - padB);
+
+      gCtx.clearRect(0, 0, w, h);
+
+      gCtx.strokeStyle = "rgba(148, 163, 184, 0.35)";
+      gCtx.lineWidth = 1;
+      gCtx.beginPath();
+      gCtx.moveTo(padL, padT);
+      gCtx.lineTo(padL, padT + plotH);
+      gCtx.lineTo(padL + plotW, padT + plotH);
+      gCtx.stroke();
+
+      const pts = [];
+      let maxY = 1e-9;
+
+      if (graphMode === "orb") {
+        for (let i = 0; i <= 60; i++) {
+          const rVal = 0.2 + (i / 60) * 39.8;
+          const vVal = 29.7846 * Math.sqrt(M_sun / rVal);
+          pts.push({ xNorm: i / 60, yVal: vVal });
+          if (vVal > maxY) maxY = vVal;
+        }
+        const curV = 29.7846 * Math.sqrt(M_sun / a_au);
+        const curXNorm = Math.max(0, Math.min(1, (a_au - 0.2) / 39.8));
+
+        gCtx.strokeStyle = "#22d3ee";
+        gCtx.lineWidth = 2;
+        gCtx.beginPath();
+        pts.forEach((p, idx) => {
+          const px = padL + p.xNorm * plotW;
+          const py = padT + plotH - (p.yVal / maxY) * (plotH * 0.9);
+          if (idx === 0) gCtx.moveTo(px, py);
+          else gCtx.lineTo(px, py);
+        });
+        gCtx.stroke();
+
+        const dotX = padL + curXNorm * plotW;
+        const dotY = padT + plotH - (curV / maxY) * (plotH * 0.9);
+        gCtx.fillStyle = "#f59e0b";
+        gCtx.beginPath();
+        gCtx.arc(dotX, dotY, 5, 0, Math.PI * 2);
+        gCtx.fill();
+
+        gCtx.fillStyle = "#94a3b8";
+        gCtx.font = "11px Inter, sans-serif";
+        gCtx.fillText("r: 0.2..40 а.е.", padL, h - 8);
+        gCtx.fillText(`v_max ~ ${maxY.toFixed(1)} км/с`, padL + 6, padT + 10);
+      } else {
+        for (let i = 0; i <= 60; i++) {
+          const tVal = 2500 + (i / 60) * 32500;
+          const lVal = Math.pow(R_sun, 2) * Math.pow(tVal / 5778, 4);
+          pts.push({ xNorm: i / 60, yVal: lVal });
+          if (lVal > maxY) maxY = lVal;
+        }
+        const curL = Math.pow(R_sun, 2) * Math.pow(T_k / 5778, 4);
+        const curXNorm = Math.max(0, Math.min(1, (T_k - 2500) / 32500));
+
+        gCtx.strokeStyle = "#fb7185";
+        gCtx.lineWidth = 2;
+        gCtx.beginPath();
+        pts.forEach((p, idx) => {
+          const px = padL + p.xNorm * plotW;
+          const py = padT + plotH - (p.yVal / maxY) * (plotH * 0.9);
+          if (idx === 0) gCtx.moveTo(px, py);
+          else gCtx.lineTo(px, py);
+        });
+        gCtx.stroke();
+
+        const dotX = padL + curXNorm * plotW;
+        const dotY = padT + plotH - (curL / maxY) * (plotH * 0.9);
+        gCtx.fillStyle = "#22d3ee";
+        gCtx.beginPath();
+        gCtx.arc(dotX, dotY, 5, 0, Math.PI * 2);
+        gCtx.fill();
+
+        gCtx.fillStyle = "#94a3b8";
+        gCtx.font = "11px Inter, sans-serif";
+        gCtx.fillText("T: 2500..35000 K", padL, h - 8);
+        gCtx.fillText(`L_max ~ ${maxY >= 1000 ? maxY.toExponential(1) : maxY.toFixed(1)} L☉`, padL + 6, padT + 10);
+      }
+    }
+
+    function updateLab() {
+      const m = parseFloat(labMassSlider.value);
+      const g = parseFloat(labGSlider.value);
+      const M_sun = parseFloat(labStarMassSlider.value);
+      const a_au = parseFloat(labOrbitRSlider.value);
+      const R_sun = parseFloat(labRadStarSlider.value);
+      const T_k = parseFloat(labTempStarSlider.value);
+
+      document.getElementById("labMassVal").textContent = `${m.toFixed(0)} кг`;
+      document.getElementById("labGVal").textContent = `${g.toFixed(2)} м/с²`;
+      document.getElementById("labStarMassVal").textContent = `${M_sun.toFixed(1)} M☉`;
+      document.getElementById("labOrbitRVal").textContent = `${a_au.toFixed(2)} а. е.`;
+      document.getElementById("labRadStarVal").textContent = `${R_sun.toFixed(1)} R☉`;
+      document.getElementById("labTempStarVal").textContent = `${T_k.toFixed(0)} K`;
+
+      const weight = m * g;
+      const orbV = 29.7846 * Math.sqrt(M_sun / a_au);
+      const orbT = Math.sqrt(Math.pow(a_au, 3) / M_sun);
+      const rsKm = 2.95325 * M_sun;
+      const lumSun = Math.pow(R_sun, 2) * Math.pow(T_k / 5778, 4);
+      const wienNm = 2897771 / T_k;
+
+      document.getElementById("outWeight").textContent = `${weight.toFixed(1)} Н`;
+      document.getElementById("outOrbV").textContent = `${orbV.toFixed(2)} км/с`;
+      document.getElementById("outOrbT").textContent =
+        orbT < 1 ? `${(orbT * 365.25).toFixed(1)} сут` : `${orbT.toFixed(2)} год`;
+      document.getElementById("outRs").textContent = `${rsKm.toFixed(2)} км`;
+      document.getElementById("outLum").textContent =
+        lumSun >= 1000 ? `${lumSun.toExponential(2)} L☉` : `${lumSun.toFixed(2)} L☉`;
+      document.getElementById("outWien").textContent = `${Math.round(wienNm)} нм`;
+
+      drawGraph(M_sun, a_au, R_sun, T_k);
+    }
+
+    [labMassSlider, labGSlider, labStarMassSlider, labOrbitRSlider, labRadStarSlider, labTempStarSlider].forEach((sl) => {
+      sl.addEventListener("input", updateLab);
+    });
+
+    document.getElementById("gModeOrbBtn").addEventListener("click", () => {
+      graphMode = "orb";
+      document.getElementById("gModeOrbBtn").classList.add("active");
+      document.getElementById("gModeLumBtn").classList.remove("active");
+      document.getElementById("graphModeLabel").textContent = "Орбитальная скорость v(r)";
+      updateLab();
+    });
+
+    document.getElementById("gModeLumBtn").addEventListener("click", () => {
+      graphMode = "lum";
+      document.getElementById("gModeLumBtn").classList.add("active");
+      document.getElementById("gModeOrbBtn").classList.remove("active");
+      document.getElementById("graphModeLabel").textContent = "Светимость звезды L(T)";
+      updateLab();
+    });
+
+    window.addEventListener("resize", () => {
+      resize3d();
+      render3D();
+      updateLab();
+    });
+
+    resize3d();
+    updateSelectedPanel();
+    renderPlanetsCatalog("all");
+    renderComparison();
+    updateLab();
+    requestAnimationFrame(animate3D);
+  </script>
+</body>
+</html>
